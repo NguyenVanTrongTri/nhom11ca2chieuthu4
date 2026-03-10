@@ -6,7 +6,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/users")
+@RequestMapping("/users") // Chỉnh từ /api/users thành /users theo yêu cầu giảng viên
 @CrossOrigin(origins = "*") 
 public class UserController {
     private final UserRepository repository;
@@ -15,13 +15,27 @@ public class UserController {
         this.repository = repository;
     }
 
-    // Phía người dùng thường chỉ cần xem danh sách hoặc đăng ký
+    // Đáp ứng: BASE_API/users -> trả về tất cả users
     @GetMapping
-    public List<User> getAll() { return repository.findAll(); }
+    public List<User> getAll() { 
+        return repository.findAll(); 
+    }
 
-    @PostMapping("/register") // Đổi tên cho chuyên nghiệp hơn
-    public User add(@RequestBody User user) { return repository.save(user); }
-    
-    // Thường User không có quyền xóa chính mình hoặc người khác theo cách này 
-    // nhưng nếu đồ án yêu cầu thì bạn cứ giữ nguyên hàm delete.
+    // ĐÁP ỨNG THÊM: BASE_API/users/1 -> trả về user có id=1
+    @GetMapping("/{id}")
+    public User getOne(@PathVariable Long id) {
+        return repository.findById(id).orElse(null);
+    }
+
+    // Cho phép thêm user (CRUD - Create)
+    @PostMapping
+    public User add(@RequestBody User user) { 
+        return repository.save(user); 
+    }
+
+    // Cho phép xóa user (CRUD - Delete)
+    @DeleteMapping("/{id}")
+    public void delete(@PathVariable Long id) { 
+        repository.deleteById(id); 
+    }
 }
