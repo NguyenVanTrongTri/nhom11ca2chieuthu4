@@ -6,8 +6,8 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/admin/users")
-@CrossOrigin(origins = "*") // Cho phép Frontend gọi API
+@RequestMapping("/api/users")
+@CrossOrigin(origins = "*") 
 public class UserController {
     private final UserRepository repository;
 
@@ -15,12 +15,13 @@ public class UserController {
         this.repository = repository;
     }
 
+    // Phía người dùng thường chỉ cần xem danh sách hoặc đăng ký
     @GetMapping
     public List<User> getAll() { return repository.findAll(); }
 
-    @PostMapping
+    @PostMapping("/register") // Đổi tên cho chuyên nghiệp hơn
     public User add(@RequestBody User user) { return repository.save(user); }
-
-    @DeleteMapping("/{id}")
-    public void delete(@PathVariable Long id) { repository.deleteById(id); }
+    
+    // Thường User không có quyền xóa chính mình hoặc người khác theo cách này 
+    // nhưng nếu đồ án yêu cầu thì bạn cứ giữ nguyên hàm delete.
 }
