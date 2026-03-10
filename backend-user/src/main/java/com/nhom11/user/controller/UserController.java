@@ -6,7 +6,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/users") // Chỉnh từ /api/users thành /users theo yêu cầu giảng viên
+@RequestMapping("/users") 
 @CrossOrigin(origins = "*") 
 public class UserController {
     private final UserRepository repository;
