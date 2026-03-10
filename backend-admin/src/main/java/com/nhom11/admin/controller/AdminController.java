@@ -6,8 +6,8 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/admin/users")
-@CrossOrigin(origins = "*") // Cho phép Frontend gọi API
+@RequestMapping("/admin/users") // Thống nhất đường dẫn là /admin/users
+@CrossOrigin(origins = "*")    // Quan trọng: Để 3 domain kia gọi được vào đây
 public class AdminController {
     private final UserRepository repository;
 
