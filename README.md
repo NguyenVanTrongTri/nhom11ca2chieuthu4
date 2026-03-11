@@ -1,6 +1,6 @@
 # Backend Admin
 Responsible: Đỗ Ngọc Tường Vy
-# Backend 
+# Backend User
 Responsible: Nguyễn Văn Tâm
 # Frontend Admin
 Responsible: Lê Hoàng Minh	Trí
