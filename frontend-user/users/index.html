@@ -39,6 +39,11 @@ tr:nth-child(even){
 background:#f2f2f2;
 }
 
+.loading{
+text-align:center;
+color:gray;
+}
+
 </style>
 
 </head>
@@ -57,19 +62,32 @@ background:#f2f2f2;
 </thead>
 
 <tbody id="table-body">
-
+<tr>
+<td colspan="2" class="loading">Loading dữ liệu...</td>
+</tr>
 </tbody>
 
 </table>
 
-
 <script>
+
+function loadUsers(){
 
 fetch("https://backend-user-lq25.onrender.com/users")
 .then(res => res.json())
 .then(data => {
 
 let html="";
+
+if(data.length === 0){
+
+html = `
+<tr>
+<td colspan="2">Không có dữ liệu</td>
+</tr>
+`;
+
+}else{
 
 data.forEach(u=>{
 
@@ -82,9 +100,24 @@ html += `
 
 });
 
+}
+
 document.getElementById("table-body").innerHTML = html;
 
+})
+.catch(error=>{
+
+document.getElementById("table-body").innerHTML=`
+<tr>
+<td colspan="2">Lỗi tải dữ liệu</td>
+</tr>
+`;
+
 });
+
+}
+
+loadUsers();
 
 </script>
 
