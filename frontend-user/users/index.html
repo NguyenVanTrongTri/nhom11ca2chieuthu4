@@ -1,1 +1,33 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Users</title>
+</head>
 
+<body>
+
+<h2>Danh sách Users</h2>
+
+<ul id="list"></ul>
+
+<script>
+
+fetch("https://backend-admin-909u.onrender.com/users")
+.then(res => res.json())
+.then(data => {
+
+let html="";
+
+data.forEach(u=>{
+html += `<li>${u.id} - ${u.name}</li>`;
+});
+
+document.getElementById("list").innerHTML = html;
+
+});
+
+</script>
+
+</body>
+</html>
