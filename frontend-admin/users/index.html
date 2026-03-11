@@ -1,1 +1,125 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Danh sách Users</title>
 
+<style>
+
+body{
+font-family: Arial;
+background:#f4f6f9;
+margin:40px;
+}
+
+h1{
+text-align:center;
+}
+
+table{
+border-collapse: collapse;
+width: 400px;
+margin:auto;
+background:white;
+box-shadow:0 2px 8px rgba(0,0,0,0.2);
+}
+
+th,td{
+padding:12px;
+border:1px solid #ddd;
+text-align:center;
+}
+
+th{
+background:#2c3e50;
+color:white;
+}
+
+tr:nth-child(even){
+background:#f2f2f2;
+}
+
+.loading{
+text-align:center;
+color:gray;
+}
+
+</style>
+
+</head>
+
+<body>
+
+<h1>Danh sách Users</h1>
+
+<table>
+
+<thead>
+<tr>
+<th>ID</th>
+<th>Name</th>
+</tr>
+</thead>
+
+<tbody id="table-body">
+<tr>
+<td colspan="2" class="loading">Loading dữ liệu...</td>
+</tr>
+</tbody>
+
+</table>
+
+<script>
+
+function loadUsers(){
+
+fetch("https://backend-user-lq25.onrender.com/users")
+.then(res => res.json())
+.then(data => {
+
+let html="";
+
+if(data.length === 0){
+
+html = `
+<tr>
+<td colspan="2">Không có dữ liệu</td>
+</tr>
+`;
+
+}else{
+
+data.forEach(u=>{
+
+html += `
+<tr>
+<td>${u.id}</td>
+<td>${u.name}</td>
+</tr>
+`;
+
+});
+
+}
+
+document.getElementById("table-body").innerHTML = html;
+
+})
+.catch(error=>{
+
+document.getElementById("table-body").innerHTML=`
+<tr>
+<td colspan="2">Lỗi tải dữ liệu</td>
+</tr>
+`;
+
+});
+
+}
+
+loadUsers();
+
+</script>
+
+</body>
+</html>
