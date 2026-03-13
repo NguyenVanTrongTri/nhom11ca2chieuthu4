@@ -100,7 +100,7 @@
     }
 
     // 3. Hàm SỬA (Đã tối ưu trải nghiệm)
-       function updateUser() {
+    function updateUser() {
     const id = document.getElementById("user-id").value;
     const name = document.getElementById("user-name").value;
 
@@ -121,7 +121,7 @@
     })
     .then(res => {
         if(!res.ok) throw new Error("Update failed");
-        return res.text();
+        return res.json();   // sửa ở đây
     })
     .then(() => {
         loadUsers();
