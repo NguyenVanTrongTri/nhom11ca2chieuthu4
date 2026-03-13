@@ -6,8 +6,8 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/users")
-@CrossOrigin(origins = "*")
+@RequestMapping("/users") 
+@CrossOrigin(origins = "*") 
 public class UserController {
 
     private final UserRepository repository;
@@ -16,40 +16,41 @@ public class UserController {
         this.repository = repository;
     }
 
-    // Lấy tất cả user
+    // Lấy tất cả users
     @GetMapping
-    public List<User> getAll() {
-        return repository.findAll();
+    public List<User> getAll() { 
+        return repository.findAll(); 
     }
 
-    // Lấy user theo ID
+    // Lấy user theo id
     @GetMapping("/{id}")
     public User getOne(@PathVariable Long id) {
-        return repository.findById(id)
-                .orElseThrow(() -> new RuntimeException("User không tồn tại với id = " + id));
+        return repository.findById(id).orElse(null);
     }
 
     // Thêm user
     @PostMapping
-    public User add(@RequestBody User user) {
-        return repository.save(user);
+    public User add(@RequestBody User user) { 
+        return repository.save(user); 
     }
 
-    // Cập nhật user
+    // Sửa user
     @PutMapping("/{id}")
     public User update(@PathVariable Long id, @RequestBody User newUser) {
 
-        User user = repository.findById(id)
-                .orElseThrow(() -> new RuntimeException("User không tồn tại với id = " + id));
+        User user = repository.findById(id).orElse(null);
 
-        user.setName(newUser.getName());
+        if(user != null){
+            user.setName(newUser.getName());
+            return repository.save(user);
+        }
 
-        return repository.save(user);
+        return null;
     }
 
     // Xóa user
     @DeleteMapping("/{id}")
-    public void delete(@PathVariable Long id) {
-        repository.deleteById(id);
+    public void delete(@PathVariable Long id) { 
+        repository.deleteById(id); 
     }
 }
