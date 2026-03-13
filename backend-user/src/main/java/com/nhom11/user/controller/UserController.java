@@ -6,36 +6,53 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/users") 
-@CrossOrigin(origins = "*") 
+@RequestMapping("/users")
+@CrossOrigin(origins = "*")
 public class UserController {
+
     private final UserRepository repository;
 
     public UserController(UserRepository repository) {
         this.repository = repository;
     }
 
-    // Đáp ứng: BASE_API/users -> trả về tất cả users
+    // Lấy tất cả user
     @GetMapping
-    public List<User> getAll() { 
-        return repository.findAll(); 
+    public List<User> getAll() {
+        return repository.findAll();
     }
 
-    // ĐÁP ỨNG THÊM: BASE_API/users/1 -> trả về user có id=1
+    // Lấy user theo ID
     @GetMapping("/{id}")
     public User getOne(@PathVariable Long id) {
-        return repository.findById(id).orElse(null);
+        return repository.findById(id)
+                .orElseThrow(() -> new RuntimeException("User không tồn tại với id = " + id));
     }
 
-    // Cho phép thêm user (CRUD - Create)
+    // Thêm user
     @PostMapping
-    public User add(@RequestBody User user) { 
-        return repository.save(user); 
+    public User add(@RequestBody User user) {
+        return repository.save(user);
     }
 
-    // Cho phép xóa user (CRUD - Delete)
+    // Cập nhật user
+    @PutMapping("/{id}")
+    public User update(@PathVariable Long id, @RequestBody User newUser) {
+
+        User user = repository.findById(id)
+                .orElseThrow(() -> new RuntimeException("User không tồn tại với id = " + id));
+
+        // Cập nhật dữ liệu (sửa theo field trong User.java)
+        user.setName(newUser.getName());
+        user.setEmail(newUser.getEmail());
+        user.setPassword(newUser.getPassword());
+
+        return repository.save(user);
+    }
+
+    // Xóa user
     @DeleteMapping("/{id}")
-    public void delete(@PathVariable Long id) { 
-        repository.deleteById(id); 
+    public void delete(@PathVariable Long id) {
+        repository.deleteById(id);
     }
 }
