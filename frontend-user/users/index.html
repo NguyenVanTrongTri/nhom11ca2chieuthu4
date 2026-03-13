@@ -100,7 +100,7 @@
     }
 
     // 3. Hàm SỬA (Đã tối ưu trải nghiệm)
-    function updateUser() {
+   function updateUser() {
     const id = document.getElementById("user-id").value;
     const name = document.getElementById("user-name").value;
 
@@ -115,25 +115,23 @@
     }
 
     fetch(`${API_URL}/${id}`, {
-        method: "PATCH",
+        method: "PUT",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ name: name })
+        body: JSON.stringify({
+            id: Number(id),
+            name: name
+        })
     })
-    .then(res => {
-        if(res.ok) {
-            loadUsers();
-            clearInput();
-        } else {
-            alert("Lỗi server!");
-            loadUsers();
-        }
+    .then(res => res.json())
+    .then(() => {
+        loadUsers();
+        clearInput();
     })
     .catch(() => {
         alert("Không kết nối được server");
         loadUsers();
     });
 }
-
     // 4. Hàm XÓA (Giữ nguyên vì đã tốt)
     function deleteUser() {
         const id = document.getElementById("user-id").value;
