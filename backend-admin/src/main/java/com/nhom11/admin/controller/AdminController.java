@@ -7,33 +7,48 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/users") 
-@CrossOrigin(origins = "*")
-public class AdminController {
+@CrossOrigin(origins = "*") 
+public class UserController {
+
     private final UserRepository repository;
 
-    public AdminController(UserRepository repository) {
+    public UserController(UserRepository repository) {
         this.repository = repository;
     }
 
-    // BASE_API/users -> Lấy danh sách tất cả users (Yêu cầu Read - R)
+    // Lấy tất cả users
     @GetMapping
     public List<User> getAll() { 
         return repository.findAll(); 
     }
 
-    // BASE_API/users/1 -> Lấy user theo ID (Yêu cầu bắt buộc trong ảnh)
+    // Lấy user theo id
     @GetMapping("/{id}")
     public User getOne(@PathVariable Long id) {
         return repository.findById(id).orElse(null);
     }
 
-    // CRUD: Thêm mới user
+    // Thêm user
     @PostMapping
     public User add(@RequestBody User user) { 
         return repository.save(user); 
     }
 
-    // CRUD: Xóa user
+    // Sửa user
+    @PutMapping("/{id}")
+    public User update(@PathVariable Long id, @RequestBody User newUser) {
+
+        User user = repository.findById(id).orElse(null);
+
+        if(user != null){
+            user.setName(newUser.getName());
+            return repository.save(user);
+        }
+
+        return null;
+    }
+
+    // Xóa user
     @DeleteMapping("/{id}")
     public void delete(@PathVariable Long id) { 
         repository.deleteById(id); 
