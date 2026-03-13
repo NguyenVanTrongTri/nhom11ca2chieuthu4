@@ -100,7 +100,7 @@
     }
 
     // 3. Hàm SỬA (Đã tối ưu trải nghiệm)
-   function updateUser() {
+       function updateUser() {
     const id = document.getElementById("user-id").value;
     const name = document.getElementById("user-name").value;
 
@@ -110,19 +110,19 @@
     if(row) {
         row.classList.add("pending");
         row.cells[1].innerText = name + " (Đang đồng bộ...)";
-    } else {
-        return alert("Không tìm thấy người dùng có ID này!");
     }
 
     fetch(`${API_URL}/${id}`, {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-            id: Number(id),
             name: name
         })
     })
-    .then(res => res.json())
+    .then(res => {
+        if(!res.ok) throw new Error("Update failed");
+        return res.text();
+    })
     .then(() => {
         loadUsers();
         clearInput();
