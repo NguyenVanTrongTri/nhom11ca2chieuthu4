@@ -42,10 +42,7 @@ public class UserController {
         User user = repository.findById(id)
                 .orElseThrow(() -> new RuntimeException("User không tồn tại với id = " + id));
 
-        // Cập nhật dữ liệu (sửa theo field trong User.java)
         user.setName(newUser.getName());
-        user.setEmail(newUser.getEmail());
-        user.setPassword(newUser.getPassword());
 
         return repository.save(user);
     }
