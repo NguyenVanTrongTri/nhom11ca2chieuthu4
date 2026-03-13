@@ -1,4 +1,4 @@
-sữa backend admin trước ,package com.nhom11.admin;
+package com.nhom11.admin;
 
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
