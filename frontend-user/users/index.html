@@ -97,28 +97,42 @@
         }
 
         // 3. Hàm sửa với hiệu ứng phản hồi nhanh
-        function updateUser() {
-            const id = document.getElementById("user-id").value;
-            const name = document.getElementById("user-name").value;
-            if(!id || !name) return alert("Nhập ID và Tên!");
+       // 3. Hàm sửa đã được tối ưu
+function updateUser() {
+    const id = document.getElementById("user-id").value;
+    const name = document.getElementById("user-name").value;
+    
+    if(!id || !name) return alert("Vui lòng nhập đầy đủ ID và Tên mới!");
 
-            // Cập nhật giao diện ngay lập tức
-            const row = document.getElementById(`row-${id}`);
-            if(row) {
-                row.classList.add("pending");
-                row.cells[1].innerText = name + " (Đang lưu...)";
-            }
+    // Hiệu ứng phản hồi nhanh trên giao diện
+    const row = document.getElementById(`row-${id}`);
+    if(row) {
+        row.classList.add("pending");
+        row.cells[1].innerText = name + " (Đang đồng bộ...)";
+    } else {
+        return alert("Không tìm thấy người dùng có ID này để sửa!");
+    }
 
-            fetch(`${API_URL}/${id}`, {
-                method: "PUT",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ name: name })
-            })
-            .then(() => {
-                loadUsers();
-                clearInput();
-            });
+    fetch(`${API_URL}/${id}`, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ name: name })
+    })
+    .then(res => {
+        if(res.ok) {
+            alert("Cập nhật thành công!");
+            loadUsers(); // Chỉ load lại khi Server đã báo OK
+            clearInput();
+        } else {
+            alert("Lỗi: Không thể cập nhật dữ liệu trên Server!");
+            loadUsers(); // Load lại để trả về tên cũ nếu lỗi
         }
+    })
+    .catch(err => {
+        console.error("Lỗi kết nối:", err);
+        alert("Mất kết nối với Server!");
+    });
+}
 
         // 4. Hàm xóa nhanh
         function deleteUser() {
