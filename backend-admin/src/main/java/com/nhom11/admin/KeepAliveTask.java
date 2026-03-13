@@ -14,18 +14,18 @@ public class KeepAliveTask {
 
         try {
 
-            URL url = new URL("https://backend-admin-909u.onrender.com");
+            URL url = new URL("https://backend-admin-909u.onrender.com/users");
 
             HttpURLConnection conn = (HttpURLConnection) url.openConnection();
             conn.setRequestMethod("GET");
 
             int responseCode = conn.getResponseCode();
 
-            System.out.println("Ping Render OK: " + responseCode);
+            System.out.println(">>> [Admin-Service] Ping Render OK: " + responseCode);
 
         } catch (Exception e) {
 
-            System.out.println("Ping failed");
+            System.out.println(">>> [Admin-Service] Ping failed");
 
         }
     }
