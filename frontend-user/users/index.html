@@ -101,35 +101,38 @@
 
     // 3. Hàm SỬA (Đã tối ưu trải nghiệm)
     function updateUser() {
-        const id = document.getElementById("user-id").value;
-        const name = document.getElementById("user-name").value;
-        
-        if(!id || !name) return alert("Vui lòng nhập đầy đủ ID và Tên mới!");
+    const id = document.getElementById("user-id").value;
+    const name = document.getElementById("user-name").value;
 
-        const row = document.getElementById(`row-${id}`);
-        if(row) {
-            row.classList.add("pending");
-            row.cells[1].innerText = name + " (Đang đồng bộ...)";
-        } else {
-            return alert("Không tìm thấy người dùng có ID này!");
-        }
+    if(!id || !name) return alert("Vui lòng nhập đầy đủ ID và Tên mới!");
 
-        fetch(`${API_URL}/${id}`, {
-            method: "PUT",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ name: name })
-        })
-        .then(res => {
-            if(res.ok) {
-                // Không nên dùng alert chặn luồng ở đây để UX mượt hơn
-                loadUsers(); 
-                clearInput();
-            } else {
-                alert("Lỗi server!");
-                loadUsers();
-            }
-        });
+    const row = document.getElementById(`row-${id}`);
+    if(row) {
+        row.classList.add("pending");
+        row.cells[1].innerText = name + " (Đang đồng bộ...)";
+    } else {
+        return alert("Không tìm thấy người dùng có ID này!");
     }
+
+    fetch(`${API_URL}/${id}`, {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ name: name })
+    })
+    .then(res => {
+        if(res.ok) {
+            loadUsers();
+            clearInput();
+        } else {
+            alert("Lỗi server!");
+            loadUsers();
+        }
+    })
+    .catch(() => {
+        alert("Không kết nối được server");
+        loadUsers();
+    });
+}
 
     // 4. Hàm XÓA (Giữ nguyên vì đã tốt)
     function deleteUser() {
