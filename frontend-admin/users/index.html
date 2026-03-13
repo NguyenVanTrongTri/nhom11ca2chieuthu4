@@ -49,101 +49,114 @@
         <button id="del-btn" class="btn-delete" onclick="deleteUser()">Xóa (theo ID)</button>
     </div>
 
-    <script>
-        const API_URL = "https://backend-user-lq25.onrender.com/users";
+   <script>
+    const API_URL = "https://backend-user-lq25.onrender.com/users";
 
-        // 1. Hàm lấy danh sách chính thức từ Server
-        function loadUsers() {
-            fetch(API_URL)
-                .then(res => res.json())
-                .then(data => {
-                    renderData(data);
-                })
-                .catch(() => {
-                    document.getElementById("table-body").innerHTML = '<tr><td colspan="2">Lỗi tải dữ liệu</td></tr>';
-                });
-        }
-
-        // Hàm render dữ liệu ra bảng
-        function renderData(data) {
-            let html = data.length === 0 ? '<tr><td colspan="2">Không có dữ liệu</td></tr>' : 
-                data.map(u => `<tr id="row-${u.id}"><td>${u.id}</td><td>${u.name}</td></tr>`).join('');
-            document.getElementById("table-body").innerHTML = html;
-        }
-
-        // 2. Hàm thêm mới với Optimistic UI
-        function addUser() {
-            const name = document.getElementById("user-name").value;
-            if(!name) return alert("Vui lòng nhập tên!");
-
-            // Tạm thời tạo 1 ID giả để hiển thị ngay
-            const tempId = "Updating...";
-            const tableBody = document.getElementById("table-body");
-            
-            // Thêm ngay vào bảng (Optimistic Update)
-            const newRow = `<tr id="temp-row" class="pending"><td>${tempId}</td><td>${name}</td></tr>`;
-            tableBody.innerHTML += newRow;
-            
-            clearInput();
-
-            fetch(API_URL, {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ name: name })
-            })
-            .then(res => {
-                if(res.ok) loadUsers(); // Sau khi server xong thì cập nhật lại ID thật
+    function loadUsers() {
+        fetch(API_URL)
+            .then(res => res.json())
+            .then(data => renderData(data))
+            .catch(() => {
+                document.getElementById("table-body").innerHTML = '<tr><td colspan="2">Lỗi tải dữ liệu</td></tr>';
             });
+    }
+
+    function renderData(data) {
+        const tableBody = document.getElementById("table-body");
+        if (!data || data.length === 0) {
+            tableBody.innerHTML = '<tr><td colspan="2">Không có dữ liệu</td></tr>';
+            return;
         }
+        let html = data.map(u => `<tr id="row-${u.id}"><td>${u.id}</td><td>${u.name}</td></tr>`).join('');
+        tableBody.innerHTML = html;
+    }
 
-        // 3. Hàm sửa với hiệu ứng phản hồi nhanh
-        function updateUser() {
-            const id = document.getElementById("user-id").value;
-            const name = document.getElementById("user-name").value;
-            if(!id || !name) return alert("Nhập ID và Tên!");
+    // 2. Hàm THÊM (Đã sửa để xóa dòng tạm)
+    function addUser() {
+        const nameInput = document.getElementById("user-name");
+        const name = nameInput.value;
+        if(!name) return alert("Vui lòng nhập tên!");
 
-            // Cập nhật giao diện ngay lập tức
-            const row = document.getElementById(`row-${id}`);
-            if(row) {
-                row.classList.add("pending");
-                row.cells[1].innerText = name + " (Đang lưu...)";
+        const tableBody = document.getElementById("table-body");
+        // Thêm dòng tạm với ID "temp-row"
+        const newRow = `<tr id="temp-row" class="pending"><td>...</td><td>${name} (Đang tạo...)</td></tr>`;
+        tableBody.innerHTML += newRow;
+        
+        clearInput();
+
+        fetch(API_URL, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ name: name })
+        })
+        .then(res => {
+            if(res.ok) {
+                // Xóa dòng tạm ngay lập tức trước khi load lại dữ liệu thật
+                const temp = document.getElementById("temp-row");
+                if(temp) temp.remove();
+                loadUsers(); 
             }
+        });
+    }
 
-            fetch(`${API_URL}/${id}`, {
-                method: "PUT",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ name: name })
-            })
-            .then(() => {
-                loadUsers();
-                clearInput();
-            });
-        }
+    // 3. Hàm SỬA (Đã tối ưu trải nghiệm)
+    function updateUser() {
+    const id = document.getElementById("user-id").value;
+    const name = document.getElementById("user-name").value;
 
-        // 4. Hàm xóa nhanh
-        function deleteUser() {
-            const id = document.getElementById("user-id").value;
-            if(!id) return alert("Nhập ID cần xóa!");
+    if(!id || !name) return alert("Vui lòng nhập đầy đủ ID và Tên mới!");
 
-            if(confirm("Xác nhận xóa?")) {
-                // Ẩn dòng đó ngay lập tức
-                const row = document.getElementById(`row-${id}`);
-                if(row) row.style.display = "none";
+    const row = document.getElementById(`row-${id}`);
+    if(row) {
+        row.classList.add("pending");
+        row.cells[1].innerText = name + " (Đang đồng bộ...)";
+    }
 
-                fetch(`${API_URL}/${id}`, { method: "DELETE" })
-                .then(() => {
+    fetch(`${API_URL}/${id}`, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+            name: name
+        })
+    })
+    .then(res => {
+        if(!res.ok) throw new Error("Update failed");
+        return res.json();   // sửa ở đây
+    })
+    .then(() => {
+        loadUsers();
+        clearInput();
+    })
+    .catch(() => {
+        alert("Không kết nối được server");
+        loadUsers();
+    });
+}
+    // 4. Hàm XÓA (Giữ nguyên vì đã tốt)
+    function deleteUser() {
+        const id = document.getElementById("user-id").value;
+        if(!id) return alert("Nhập ID cần xóa!");
+
+        if(confirm("Xác nhận xóa ID: " + id + "?")) {
+            const row = document.getElementById(`row-${id}`);
+            if(row) row.style.opacity = "0.3"; // Làm mờ trước khi mất hẳn
+
+            fetch(`${API_URL}/${id}`, { method: "DELETE" })
+            .then(res => {
+                if(res.ok) {
                     loadUsers();
                     clearInput();
-                });
-            }
+                }
+            });
         }
+    }
 
-        function clearInput() {
-            document.getElementById("user-id").value = "";
-            document.getElementById("user-name").value = "";
-        }
+    function clearInput() {
+        document.getElementById("user-id").value = "";
+        document.getElementById("user-name").value = "";
+    }
 
-        loadUsers();
-    </script>
+    loadUsers();
+</script>
 </body>
 </html>
