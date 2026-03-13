@@ -2,9 +2,7 @@ package com.nhom11.admin;
 
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
-
-import java.net.HttpURLConnection;
-import java.net.URL;
+import org.springframework.web.client.RestTemplate;
 
 @Component
 public class KeepAliveTask {
@@ -12,21 +10,29 @@ public class KeepAliveTask {
     @Scheduled(fixedRate = 600000) // 10 phút
     public void keepAlive() {
 
-        try {
+        String[] urls = {
 
-            URL url = new URL("https://backend-admin-909u.onrender.com/users");
+            "https://backend-user-lq25.onrender.com/users", // backend user
 
-            HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-            conn.setRequestMethod("GET");
+            "https://backend-admin-909u.onrender.com/users", // backend admin
 
-            int responseCode = conn.getResponseCode();
+            "https://nhom11ca2chieuthu4.onrender.com" // frontend
+        };
 
-            System.out.println(">>> [Admin-Service] Ping Render OK: " + responseCode);
+        RestTemplate restTemplate = new RestTemplate();
 
-        } catch (Exception e) {
+        for (String url : urls) {
+            try {
 
-            System.out.println(">>> [Admin-Service] Ping failed");
+                restTemplate.getForEntity(url, String.class);
 
+                System.out.println(">>> [User-Service] Da ping de giu thuc: " + url);
+
+            } catch (Exception e) {
+
+                System.err.println(">>> [User-Service] Ping that bai: " + url);
+
+            }
         }
     }
 }
