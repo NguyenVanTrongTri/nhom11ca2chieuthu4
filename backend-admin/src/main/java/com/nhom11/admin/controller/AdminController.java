@@ -8,11 +8,11 @@ import java.util.List;
 @RestController
 @RequestMapping("/users") 
 @CrossOrigin(origins = "*") 
-public class UserController {
+public class AdminController {
 
-    private final UserRepository repository;
+    private final AdminRepository repository;
 
-    public UserController(UserRepository repository) {
+    public UserController(AdminRepository repository) {
         this.repository = repository;
     }
 
