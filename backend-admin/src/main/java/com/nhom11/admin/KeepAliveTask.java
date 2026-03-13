@@ -14,7 +14,7 @@ public class KeepAliveTask {
 
         try {
 
-            URL url = new URL("https://backend-admin-909u.onrender.com/users");
+            URL url = new URL("https://backend-admin-909u.onrender.com");
 
             HttpURLConnection conn = (HttpURLConnection) url.openConnection();
             conn.setRequestMethod("GET");
