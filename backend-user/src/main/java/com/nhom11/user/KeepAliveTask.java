@@ -7,26 +7,32 @@ import org.springframework.web.client.RestTemplate;
 @Component
 public class KeepAliveTask {
 
-    // 600000 ms = 10 phút chạy một lần
-    @Scheduled(fixedRate = 600000)
+    @Scheduled(fixedRate = 600000) // 10 phút
     public void keepAlive() {
-        try {
-            // Thay đổi link bên dưới cho đúng với domain Render của bạn
-            String[] urls = {
-                "https://backend-user-xxx.onrender.com", // Link của chính nó (User)
-                "https://backend-admin-909u.onrender.com", // Link của Admin
-                "https://nhom11ca2chieuthu4.onrender.com" // Ví dụ: Link Frontend User
-            };
 
-            RestTemplate restTemplate = new RestTemplate();
-            for (String url : urls) {
-                // Gửi request GET để kích hoạt server
+        String[] urls = {
+
+            "https://backend-user-lq25.onrender.com/users", // backend user
+
+            "https://backend-admin-909u.onrender.com/users", // backend admin
+
+            "https://nhom11ca2chieuthu4.onrender.com" // frontend
+        };
+
+        RestTemplate restTemplate = new RestTemplate();
+
+        for (String url : urls) {
+            try {
+
                 restTemplate.getForEntity(url, String.class);
+
                 System.out.println(">>> [User-Service] Da ping de giu thuc: " + url);
+
+            } catch (Exception e) {
+
+                System.err.println(">>> [User-Service] Ping that bai: " + url);
+
             }
-        } catch (Exception e) {
-            // Log lỗi nếu ping thất bại (thường do server đang khởi động)
-            System.err.println(">>> [User-Service] Ping chua thanh cong: " + e.getMessage());
         }
     }
 }
