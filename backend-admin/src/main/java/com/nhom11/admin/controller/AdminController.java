@@ -6,20 +6,20 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/users") 
-@CrossOrigin(origins = "*") 
+@RequestMapping("/users")
+@CrossOrigin(origins = "*")
 public class AdminController {
 
-    private final AdminRepository repository;
+    private final UserRepository repository;
 
-    public UserController(AdminRepository repository) {
+    public AdminController(UserRepository repository) {
         this.repository = repository;
     }
 
     // Lấy tất cả users
     @GetMapping
-    public List<User> getAll() { 
-        return repository.findAll(); 
+    public List<User> getAll() {
+        return repository.findAll();
     }
 
     // Lấy user theo id
@@ -30,8 +30,8 @@ public class AdminController {
 
     // Thêm user
     @PostMapping
-    public User add(@RequestBody User user) { 
-        return repository.save(user); 
+    public User add(@RequestBody User user) {
+        return repository.save(user);
     }
 
     // Sửa user
@@ -50,7 +50,7 @@ public class AdminController {
 
     // Xóa user
     @DeleteMapping("/{id}")
-    public void delete(@PathVariable Long id) { 
-        repository.deleteById(id); 
+    public void delete(@PathVariable Long id) {
+        repository.deleteById(id);
     }
 }
