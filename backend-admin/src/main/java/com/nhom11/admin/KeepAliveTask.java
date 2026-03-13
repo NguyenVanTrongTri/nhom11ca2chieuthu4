@@ -11,8 +11,9 @@ public class KeepAliveTask {
     public void keepAlive() {
 
         String[] urls = {
-            "https://backend-admin-909u.onrender.com/admin", // backend admin
-            "https://nhom11ca2chieuthu4.onrender.com" // frontend
+
+            "https://backend-admin-909u.onrender.com/users",
+            "https://nhom11ca2chieuthu4.onrender.com"
         };
 
         RestTemplate restTemplate = new RestTemplate();
@@ -22,11 +23,11 @@ public class KeepAliveTask {
 
                 restTemplate.getForEntity(url, String.class);
 
-                System.out.println(">>> [User-Service] Da ping de giu thuc: " + url);
+                System.out.println(">>> [Admin-Service] Da ping de giu thuc: " + url);
 
             } catch (Exception e) {
 
-                System.err.println(">>> [User-Service] Ping that bai: " + url);
+                System.err.println(">>> [Admin-Service] Ping that bai: " + url);
 
             }
         }
