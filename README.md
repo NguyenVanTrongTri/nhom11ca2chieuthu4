@@ -1,7 +1,7 @@
 # Backend Admin
 Responsible: Đỗ Ngọc Tường Vy <br>
 Function:Quản lý tài khoản & & Quiz từ vựng 
-# Backend User
+# Backend User + Backend Admin
 Responsible: Nguyễn Văn Tâm <br>
 Function: Quản lý hệ thống & & Quiz từ vựng 
 # Backend User
