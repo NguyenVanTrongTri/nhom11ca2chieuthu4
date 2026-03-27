@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hồ Sơ Cá Nhân - English Learning App</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="../../css/style.css">
+    <link rel="stylesheet" href="../../css/dashboard.css">
+</head>
+<body>
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-dark" style="background: linear-gradient(135deg, #2563eb 0%, #1e40af 100%);">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="../../index.html">
+                <i class="fas fa-book"></i> EnglishLearn
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="vocabulary.html">Từ Vựng</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="quiz.html">Quiz</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="dashboard.html">Tiến Độ</a>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown">
+                            <i class="fas fa-user"></i> Tài Khoản
+                        </a>
+                        <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                            <li><a class="dropdown-item active" href="profile.html">Hồ Sơ Cá Nhân</a></li>
+                            <li><hr class="dropdown-divider"></li>
+                            <li><a class="dropdown-item" href="../login.html">Đăng Xuất</a></li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="dashboard-content" style="padding: 2rem;">
+        <div class="container">
+            <!-- Header -->
+            <h1 class="section-title"><i class="fas fa-user-circle"></i> Hồ Sơ Cá Nhân</h1>
+
+            <!-- Profile Header -->
+            <div class="profile-header">
+                <div class="profile-avatar">JD</div>
+                <div class="profile-info">
+                    <h2>John Doe</h2>
+                    <p><i class="fas fa-envelope"></i> john.doe@example.com</p>
+                    <p><i class="fas fa-calendar-alt"></i> Tham gia: 15 tháng 1, 2024</p>
+                </div>
+                <div class="profile-actions">
+                    <button class="profile-btn profile-btn-primary" data-bs-toggle="modal" data-bs-target="#editProfileModal">
+                        <i class="fas fa-edit"></i> Chỉnh Sửa
+                    </button>
+                    <button class="profile-btn profile-btn-secondary" onclick="changeAvatar()">
+                        <i class="fas fa-camera"></i> Ảnh
+                    </button>
+                </div>
+            </div>
+
+            <!-- Tab Navigation -->
+            <ul class="nav nav-tabs" id="profileTabs" role="tablist" style="margin-bottom: 2rem; border-bottom: 1px solid #e5e7eb;">
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link active" id="tab-profile" data-bs-toggle="tab" data-bs-target="#tabProfile" type="button" role="tab">
+                        <i class="fas fa-user"></i> Thông Tin Cá Nhân
+                    </button>
+                </li>
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link" id="tab-learning" data-bs-toggle="tab" data-bs-target="#tabLearning" type="button" role="tab">
+                        <i class="fas fa-book"></i> Mục Tiêu Học Tập
+                    </button>
+                </li>
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link" id="tab-settings" data-bs-toggle="tab" data-bs-target="#tabSettings" type="button" role="tab">
+                        <i class="fas fa-cog"></i> Cài Đặt
+                    </button>
+                </li>
+            </ul>
+
+            <!-- Tab Content -->
+            <div class="tab-content" id="profileTabContent">
+                <!-- Profile Tab -->
+                <div class="tab-pane fade show active" id="tabProfile" role="tabpanel">
+                    <form class="form-section">
+                        <h3 class="form-section-title">Thông Tin Cá Nhân</h3>
+                        
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="firstName" class="form-label">Tên</label>
+                                    <input type="text" class="form-control" id="firstName" value="John">
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="lastName" class="form-label">Họ</label>
+                                    <input type="text" class="form-control" id="lastName" value="Doe">
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="email" class="form-label">Email</label>
+                            <input type="email" class="form-control" id="email" value="john.doe@example.com">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="phone" class="form-label">Số Điện Thoại</label>
+                            <input type="tel" class="form-control" id="phone" value="+84 9 1234 5678">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="bio" class="form-label">Tiểu Sử</label>
+                            <textarea class="form-control" id="bio" rows="4">Tôi là một người yêu thích học tiếng Anh...</textarea>
+                        </div>
+
+                        <div class="form-actions">
+                            <button type="submit" class="form-btn form-btn-save">
+                                <i class="fas fa-save"></i> Lưu Thay Đổi
+                            </button>
+                            <button type="button" class="form-btn form-btn-cancel">
+                                <i class="fas fa-times"></i> Hủy
+                            </button>
+                        </div>
+                    </form>
+                </div>
+
+                <!-- Learning Goals Tab -->
+                <div class="tab-pane fade" id="tabLearning" role="tabpanel">
+                    <form class="form-section">
+                        <h3 class="form-section-title">Mục Tiêu Học Tập</h3>
+                        
+                        <div class="form-group">
+                            <label for="dailyGoal" class="form-label">Mục Tiêu Hàng Ngày (số từ)</label>
+                            <input type="number" class="form-control" id="dailyGoal" value="20" min="1" max="100">
+                            <small class="form-text" style="color: #6b7280;">Bạn muốn học bao nhiêu từ mỗi ngày</small>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="weeklyGoal" class="form-label">Mục Tiêu Hàng Tuần (số quiz)</label>
+                            <input type="number" class="form-control" id="weeklyGoal" value="5" min="1" max="20">
+                            <small class="form-text" style="color: #6b7280;">Bạn muốn làm bao nhiêu bài quiz mỗi tuần</small>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="preferredCategory" class="form-label">Chủ Đề Ưa Thích</label>
+                            <select class="form-control" id="preferredCategory">
+                                <option>Food (Thực Phẩm)</option>
+                                <option>Travel (Du Lịch)</option>
+                                <option>Business (Kinh Doanh)</option>
+                                <option>Technology (Công Nghệ)</option>
+                                <option>Health (Sức Khỏe)</option>
+                                <option>Education (Giáo Dục)</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="difficultyLevel" class="form-label">Mức Độ Khó</label>
+                            <select class="form-control" id="difficultyLevel">
+                                <option>Dễ</option>
+                                <option selected>Trung Bình</option>
+                                <option>Khó</option>
+                            </select>
+                        </div>
+
+                        <div class="form-actions">
+                            <button type="submit" class="form-btn form-btn-save">
+                                <i class="fas fa-save"></i> Lưu Mục Tiêu
+                            </button>
+                            <button type="button" class="form-btn form-btn-cancel">
+                                <i class="fas fa-times"></i> Hủy
+                            </button>
+                        </div>
+                    </form>
+                </div>
+
+                <!-- Settings Tab -->
+                <div class="tab-pane fade" id="tabSettings" role="tabpanel">
+                    <form class="form-section">
+                        <h3 class="form-section-title">Cài Đặt Tài Khoản</h3>
+                        
+                        <div style="margin-bottom: 2rem;">
+                            <h5 style="font-weight: 600; margin-bottom: 1rem;">Bảo Mật</h5>
+                            <button type="button" class="btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#changePasswordModal">
+                                <i class="fas fa-key"></i> Đổi Mật Khẩu
+                            </button>
+                        </div>
+
+                        <div style="margin-bottom: 2rem;">
+                            <h5 style="font-weight: 600; margin-bottom: 1rem;">Thông Báo</h5>
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" id="emailNotifications" checked>
+                                <label class="form-check-label" for="emailNotifications">
+                                    Nhận thông báo qua email
+                                </label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" id="pushNotifications" checked>
+                                <label class="form-check-label" for="pushNotifications">
+                                    Nhận thông báo khi nhắc nhở học tập
+                                </label>
+                            </div>
+                        </div>
+
+                        <div style="border-top: 1px solid #e5e7eb; padding-top: 2rem;">
+                            <h5 style="font-weight: 600; margin-bottom: 1rem; color: #ef4444;">Vùng Nguy Hiểm</h5>
+                            <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#deleteAccountModal">
+                                <i class="fas fa-trash"></i> Xóa Tài Khoản
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Edit Profile Modal -->
+    <div class="modal fade" id="editProfileModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Chỉnh Sửa Hồ Sơ</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="editProfileForm">
+                        <div class="form-group">
+                            <label for="modalFirstName" class="form-label">Tên</label>
+                            <input type="text" class="form-control" id="modalFirstName" value="John">
+                        </div>
+                        <div class="form-group">
+                            <label for="modalLastName" class="form-label">Họ</label>
+                            <input type="text" class="form-control" id="modalLastName" value="Doe">
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
+                    <button type="button" class="btn btn-primary">Lưu Thay Đổi</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Change Password Modal -->
+    <div class="modal fade" id="changePasswordModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Đổi Mật Khẩu</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="changePasswordForm">
+                        <div class="form-group">
+                            <label for="currentPassword" class="form-label">Mật Khẩu Hiện Tại</label>
+                            <input type="password" class="form-control" id="currentPassword">
+                        </div>
+                        <div class="form-group">
+                            <label for="newPassword" class="form-label">Mật Khẩu Mới</label>
+                            <input type="password" class="form-control" id="newPassword">
+                        </div>
+                        <div class="form-group">
+                            <label for="confirmNewPassword" class="form-label">Xác Nhận Mật Khẩu Mới</label>
+                            <input type="password" class="form-control" id="confirmNewPassword">
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
+                    <button type="button" class="btn btn-primary">Đổi Mật Khẩu</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Delete Account Modal -->
+    <div class="modal fade" id="deleteAccountModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header bg-danger text-white">
+                    <h5 class="modal-title"><i class="fas fa-exclamation-triangle"></i> Xóa Tài Khoản</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <p><strong>Cảnh báo!</strong> Hành động này không thể hoàn tác.</p>
+                    <p>Tất cả dữ liệu, từ vựng đã học, và kết quả quiz của bạn sẽ bị xóa vĩnh viễn.</p>
+                    <div class="form-group">
+                        <label for="deleteConfirm" class="form-label">Nhập "XÓA TÀI KHOẢN" để xác nhận</label>
+                        <input type="text" class="form-control" id="deleteConfirm" placeholder="XÓA TÀI KHOẢN">
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
+                    <button type="button" class="btn btn-danger">Xóa Tài Khoản</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer style="background-color: #1f2937; color: white; padding: 2rem; text-align: center; margin-top: 3rem;">
+        <p style="margin: 0;">&copy; 2024 English Learning App. All rights reserved.</p>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="../../js/profile.js"></script>
+</body>
+</html>

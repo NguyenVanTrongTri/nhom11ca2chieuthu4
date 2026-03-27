@@ -1,0 +1,386 @@
+/* ============================================
+   Dashboard & Profile Style
+   ============================================ */
+
+.dashboard-container {
+  display: grid;
+  grid-template-columns: 250px 1fr;
+  gap: 0;
+  min-height: calc(100vh - 80px);
+}
+
+.dashboard-sidebar {
+  background-color: white;
+  border-right: 1px solid #e5e7eb;
+  padding: 0;
+}
+
+.dashboard-content {
+  padding: 2rem;
+  background-color: #f3f4f6;
+  overflow-y: auto;
+}
+
+/* Sidebar Menu */
+.sidebar-menu {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.sidebar-menu li {
+  margin: 0;
+}
+
+.sidebar-menu a {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 1rem 1.5rem;
+  color: #6b7280;
+  text-decoration: none;
+  transition: all 0.3s ease;
+  border-left: 4px solid transparent;
+  font-weight: 500;
+}
+
+.sidebar-menu a:hover,
+.sidebar-menu a.active {
+  background-color: #f3f4f6;
+  color: #2563eb;
+  border-left-color: #2563eb;
+  font-weight: 600;
+}
+
+.sidebar-menu a i {
+  font-size: 1.2rem;
+  width: 20px;
+}
+
+/* Stats Dashboard */
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 1.5rem;
+  margin-bottom: 2rem;
+}
+
+.stat-card {
+  background-color: white;
+  padding: 2rem;
+  border-radius: 8px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+  transition: all 0.3s ease;
+}
+
+.stat-card:hover {
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  transform: translateY(-2px);
+}
+
+.stat-icon {
+  width: 60px;
+  height: 60px;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.8rem;
+}
+
+.stat-icon.blue {
+  background-color: #eff6ff;
+  color: #2563eb;
+}
+
+.stat-icon.green {
+  background-color: #ecfdf5;
+  color: #10b981;
+}
+
+.stat-icon.orange {
+  background-color: #fffbeb;
+  color: #f59e0b;
+}
+
+.stat-icon.red {
+  background-color: #fef2f2;
+  color: #ef4444;
+}
+
+.stat-content h3 {
+  font-size: 0.9rem;
+  color: #6b7280;
+  font-weight: 500;
+  margin-bottom: 0.5rem;
+}
+
+.stat-value {
+  font-size: 2rem;
+  font-weight: 700;
+  color: #111827;
+}
+
+/* Profile Section */
+.profile-header {
+  background-color: white;
+  padding: 2rem;
+  border-radius: 8px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  margin-bottom: 2rem;
+  display: flex;
+  align-items: center;
+  gap: 2rem;
+}
+
+.profile-avatar {
+  width: 120px;
+  height: 120px;
+  border-radius: 50%;
+  background-color: #2563eb;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-size: 3rem;
+  font-weight: 700;
+}
+
+.profile-info h2 {
+  font-size: 1.5rem;
+  color: #111827;
+  margin-bottom: 0.5rem;
+}
+
+.profile-info p {
+  color: #6b7280;
+  margin-bottom: 0.25rem;
+}
+
+.profile-actions {
+  margin-left: auto;
+  display: flex;
+  gap: 0.75rem;
+}
+
+.profile-btn {
+  padding: 0.75rem 1.5rem;
+  border: none;
+  border-radius: 6px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.profile-btn-primary {
+  background-color: #2563eb;
+  color: white;
+}
+
+.profile-btn-primary:hover {
+  background-color: #1e40af;
+}
+
+.profile-btn-secondary {
+  background-color: white;
+  color: #2563eb;
+  border: 2px solid #2563eb;
+}
+
+.profile-btn-secondary:hover {
+  background-color: #eff6ff;
+}
+
+/* Learning Progress */
+.progress-box {
+  background-color: white;
+  padding: 1.5rem;
+  border-radius: 8px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  margin-bottom: 2rem;
+}
+
+.progress-box-title {
+  font-size: 1.2rem;
+  font-weight: 600;
+  color: #111827;
+  margin-bottom: 1.5rem;
+}
+
+.progress-item {
+  margin-bottom: 2rem;
+}
+
+.progress-item-title {
+  font-weight: 600;
+  color: #111827;
+  margin-bottom: 0.5rem;
+  display: flex;
+  justify-content: space-between;
+}
+
+.progress-item-value {
+  color: #2563eb;
+  font-weight: 700;
+}
+
+.progress {
+  height: 8px;
+  background-color: #e5e7eb;
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.progress-bar {
+  height: 100%;
+  background: linear-gradient(90deg, #2563eb 0%, #1e40af 100%);
+  transition: width 0.3s ease;
+}
+
+/* Learning Chart */
+.chart-container {
+  background-color: white;
+  padding: 1.5rem;
+  border-radius: 8px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  margin-bottom: 2rem;
+}
+
+.chart-title {
+  font-size: 1.2rem;
+  font-weight: 600;
+  color: #111827;
+  margin-bottom: 1.5rem;
+}
+
+/* Form Section */
+.form-section {
+  background-color: white;
+  padding: 2rem;
+  border-radius: 8px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  margin-bottom: 2rem;
+}
+
+.form-section-title {
+  font-size: 1.3rem;
+  font-weight: 600;
+  color: #111827;
+  margin-bottom: 1.5rem;
+  padding-bottom: 1rem;
+  border-bottom: 2px solid #e5e7eb;
+}
+
+.form-group {
+  margin-bottom: 1.5rem;
+}
+
+.form-label {
+  display: block;
+  font-weight: 500;
+  color: #111827;
+  margin-bottom: 0.5rem;
+}
+
+.form-control {
+  width: 100%;
+  padding: 0.75rem 1rem;
+  border: 1px solid #e5e7eb;
+  border-radius: 6px;
+  font-size: 1rem;
+  transition: all 0.3s ease;
+}
+
+.form-control:focus {
+  outline: none;
+  border-color: #2563eb;
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+}
+
+.form-actions {
+  display: flex;
+  gap: 1rem;
+  padding-top: 1rem;
+  border-top: 1px solid #e5e7eb;
+}
+
+.form-btn {
+  padding: 0.75rem 1.5rem;
+  border: none;
+  border-radius: 6px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.form-btn-save {
+  background-color: #2563eb;
+  color: white;
+}
+
+.form-btn-save:hover {
+  background-color: #1e40af;
+}
+
+.form-btn-cancel {
+  background-color: #e5e7eb;
+  color: #111827;
+}
+
+.form-btn-cancel:hover {
+  background-color: #d1d5db;
+}
+
+@media (max-width: 992px) {
+  .dashboard-container {
+    grid-template-columns: 1fr;
+  }
+
+  .dashboard-sidebar {
+    display: none;
+  }
+
+  .profile-header {
+    flex-direction: column;
+    text-align: center;
+  }
+
+  .profile-actions {
+    margin-left: 0;
+    width: 100%;
+  }
+
+  .profile-btn {
+    flex: 1;
+  }
+
+  .stats-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 768px) {
+  .dashboard-content {
+    padding: 1rem;
+  }
+
+  .stats-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .stat-card {
+    flex-direction: column;
+    text-align: center;
+  }
+
+  .form-actions {
+    flex-direction: column;
+  }
+
+  .form-btn {
+    width: 100%;
+  }
+}
