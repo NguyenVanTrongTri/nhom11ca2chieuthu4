@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Từ Vựng - English Learning App</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="../../css/style.css">
+    <link rel="stylesheet" href="../../css/vocabulary.css">
+</head>
+<body>
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-dark" style="background: linear-gradient(135deg, #2563eb 0%, #1e40af 100%);">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="../../index.html">
+                <i class="fas fa-book"></i> EnglishLearn
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link active" href="vocabulary.html">Từ Vựng</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="quiz.html">Quiz</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="dashboard.html">Tiến Độ</a>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown">
+                            <i class="fas fa-user"></i> Tài Khoản
+                        </a>
+                        <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                            <li><a class="dropdown-item" href="profile.html">Hồ Sơ Cá Nhân</a></li>
+                            <li><a class="dropdown-item" href="../admin/admin-dashboard.html">Admin Panel</a></li>
+                            <li><hr class="dropdown-divider"></li>
+                            <li><a class="dropdown-item" href="../login.html">Đăng Xuất</a></li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="vocabulary-container">
+        <h1 class="section-title"><i class="fas fa-book-open"></i> Từ Vựng</h1>
+
+        <!-- Search Section -->
+        <div class="search-section">
+            <input type="text" class="search-input" id="searchInput" placeholder="Tìm kiếm từ vựng...">
+            <button class="search-btn" onclick="searchVocabulary()">
+                <i class="fas fa-search"></i> Tìm Kiếm
+            </button>
+        </div>
+
+        <!-- Filter Section -->
+        <div class="filter-section">
+            <div class="filter-title"><i class="fas fa-filter"></i> Lọc Theo Chủ Đề</div>
+            <div class="filter-chips">
+                <div class="chip active" data-category="all" onclick="filterByCategory('all', this)">Tất Cả</div>
+                <div class="chip" data-category="food" onclick="filterByCategory('food', this)">Food (Thực Phẩm)</div>
+                <div class="chip" data-category="travel" onclick="filterByCategory('travel', this)">Travel (Du Lịch)</div>
+                <div class="chip" data-category="business" onclick="filterByCategory('business', this)">Business (Kinh Doanh)</div>
+                <div class="chip" data-category="technology" onclick="filterByCategory('technology', this)">Technology (Công Nghệ)</div>
+                <div class="chip" data-category="health" onclick="filterByCategory('health', this)">Health (Sức Khỏe)</div>
+                <div class="chip" data-category="education" onclick="filterByCategory('education', this)">Education (Giáo Dục)</div>
+            </div>
+        </div>
+
+        <!-- Vocabulary List -->
+        <div id="vocabularyList" class="vocab-list">
+            <!-- Sample Vocabulary Cards -->
+            <div class="vocab-card" data-category="food">
+                <div class="vocab-word">
+                    Delicious
+                    <span class="sound-icon" onclick="playSound('delicious')">
+                        <i class="fas fa-volume-up"></i>
+                    </span>
+                </div>
+                <div class="vocab-phonetic">/dɪˈlɪʃəs/</div>
+                <span class="vocab-category">Food</span>
+                <div class="vocab-definition">
+                    <strong>Nghĩa:</strong> Tuyệt vời / Ngon miệng
+                </div>
+                <div class="vocab-example">
+                    <strong>Ví dụ:</strong> "This soup is absolutely delicious!"
+                </div>
+                <div class="vocab-actions">
+                    <button class="vocab-btn vocab-btn-learn">Đã Học</button>
+                    <button class="vocab-btn vocab-btn-bookmark">Bookmark</button>
+                </div>
+            </div>
+
+            <div class="vocab-card" data-category="travel">
+                <div class="vocab-word">
+                    Journey
+                    <span class="sound-icon" onclick="playSound('journey')">
+                        <i class="fas fa-volume-up"></i>
+                    </span>
+                </div>
+                <div class="vocab-phonetic">/ˈdʒɜːrni/</div>
+                <span class="vocab-category">Travel</span>
+                <div class="vocab-definition">
+                    <strong>Nghĩa:</strong> Chuyến đi dài / Cuộc hành trình
+                </div>
+                <div class="vocab-example">
+                    <strong>Ví dụ:</strong> "The journey to Paris was wonderful."
+                </div>
+                <div class="vocab-actions">
+                    <button class="vocab-btn vocab-btn-learn">Đã Học</button>
+                    <button class="vocab-btn vocab-btn-bookmark">Bookmark</button>
+                </div>
+            </div>
+
+            <div class="vocab-card" data-category="business">
+                <div class="vocab-word">
+                    Profit
+                    <span class="sound-icon" onclick="playSound('profit')">
+                        <i class="fas fa-volume-up"></i>
+                    </span>
+                </div>
+                <div class="vocab-phonetic">/ˈprɒfɪt/</div>
+                <span class="vocab-category">Business</span>
+                <div class="vocab-definition">
+                    <strong>Nghĩa:</strong> Lợi nhuận / Lợi ích
+                </div>
+                <div class="vocab-example">
+                    <strong>Ví dụ:</strong> "The company made a huge profit last quarter."
+                </div>
+                <div class="vocab-actions">
+                    <button class="vocab-btn vocab-btn-learn">Đã Học</button>
+                    <button class="vocab-btn vocab-btn-bookmark">Bookmark</button>
+                </div>
+            </div>
+
+            <div class="vocab-card" data-category="technology">
+                <div class="vocab-word">
+                    Algorithm
+                    <span class="sound-icon" onclick="playSound('algorithm')">
+                        <i class="fas fa-volume-up"></i>
+                    </span>
+                </div>
+                <div class="vocab-phonetic">/ˈælɡərɪðm/</div>
+                <span class="vocab-category">Technology</span>
+                <div class="vocab-definition">
+                    <strong>Nghĩa:</strong> Thuật toán / Quy trình
+                </div>
+                <div class="vocab-example">
+                    <strong>Ví dụ:</strong> "The AI uses a complex algorithm to learn."
+                </div>
+                <div class="vocab-actions">
+                    <button class="vocab-btn vocab-btn-learn">Đã Học</button>
+                    <button class="vocab-btn vocab-btn-bookmark">Bookmark</button>
+                </div>
+            </div>
+
+            <div class="vocab-card" data-category="health">
+                <div class="vocab-word">
+                    Nutrition
+                    <span class="sound-icon" onclick="playSound('nutrition')">
+                        <i class="fas fa-volume-up"></i>
+                    </span>
+                </div>
+                <div class="vocab-phonetic">/njuːˈtrɪʃn/</div>
+                <span class="vocab-category">Health</span>
+                <div class="vocab-definition">
+                    <strong>Nghĩa:</strong> Dinh dưỡng / Chất dinh dưỡng
+                </div>
+                <div class="vocab-example">
+                    <strong>Ví dụ:</strong> "Good nutrition is essential for health."
+                </div>
+                <div class="vocab-actions">
+                    <button class="vocab-btn vocab-btn-learn">Đã Học</button>
+                    <button class="vocab-btn vocab-btn-bookmark">Bookmark</button>
+                </div>
+            </div>
+
+            <div class="vocab-card" data-category="education">
+                <div class="vocab-word">
+                    Curriculum
+                    <span class="sound-icon" onclick="playSound('curriculum')">
+                        <i class="fas fa-volume-up"></i>
+                    </span>
+                </div>
+                <div class="vocab-phonetic">/kəˈrɪkjələm/</div>
+                <span class="vocab-category">Education</span>
+                <div class="vocab-definition">
+                    <strong>Nghĩa:</strong> Chương trình học / Giáo dục
+                </div>
+                <div class="vocab-example">
+                    <strong>Ví dụ:</strong> "The school updated its curriculum last year."
+                </div>
+                <div class="vocab-actions">
+                    <button class="vocab-btn vocab-btn-learn">Đã Học</button>
+                    <button class="vocab-btn vocab-btn-bookmark">Bookmark</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer style="background-color: #1f2937; color: white; padding: 2rem; text-align: center; margin-top: 3rem;">
+        <p style="margin: 0;">&copy; 2024 English Learning App. All rights reserved.</p>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="../../js/vocabulary.js"></script>
+</body>
+</html>
