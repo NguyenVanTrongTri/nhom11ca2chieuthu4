@@ -2,55 +2,41 @@ package com.nhom11.admin.controller;
 
 import com.nhom11.admin.model.User;
 import com.nhom11.admin.repository.UserRepository;
+import com.nhom11.admin.service.UserService;
 import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/users")
+@RequestMapping("/users") 
 @CrossOrigin(origins = "*")
 public class AdminController {
+    private final UserService userService;
 
-    private final UserRepository repository;
-
-    public AdminController(UserRepository repository) {
-        this.repository = repository;
+    public AdminController(UserService userService) {
+        this.userService = userService;
     }
 
-    // Lấy tất cả users
+    // GET ALL
     @GetMapping
     public List<User> getAll() {
-        return repository.findAll();
+        return userService.getAll();
     }
 
-    // Lấy user theo id
+    // GET BY ID
     @GetMapping("/{id}")
     public User getOne(@PathVariable Long id) {
-        return repository.findById(id).orElse(null);
+        return userService.getById(id);
     }
 
-    // Thêm user
+    // CREATE
     @PostMapping
     public User add(@RequestBody User user) {
-        return repository.save(user);
+        return userService.create(user);
     }
 
-    // Sửa user
-    @PutMapping("/{id}")
-    public User update(@PathVariable Long id, @RequestBody User newUser) {
-
-        User user = repository.findById(id).orElse(null);
-
-        if(user != null){
-            user.setName(newUser.getName());
-            return repository.save(user);
-        }
-
-        return null;
-    }
-
-    // Xóa user
+    // DELETE
     @DeleteMapping("/{id}")
     public void delete(@PathVariable Long id) {
-        repository.deleteById(id);
+        userService.delete(id);
     }
 }
