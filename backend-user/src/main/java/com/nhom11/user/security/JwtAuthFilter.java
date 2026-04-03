@@ -1,21 +1,18 @@
-package com.nhom11.admin.security;
+package com.nhom11.user.security;
 
-import com.nhom11.admin.service.CustomUserDetailsService;
-import io.jsonwebtoken.Claims;
+import com.nhom11.user.service.CustomUserDetailsService;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
-import java.util.List;
 
 @Component
 public class JwtAuthFilter extends OncePerRequestFilter {
@@ -34,8 +31,8 @@ public class JwtAuthFilter extends OncePerRequestFilter {
             throws ServletException, IOException {
         // authenzization: phân quyền
         //authorication:xác thực (chứa email,usernam ,vv)
-        System.out.println("--- JwtAuthFilter đang chạy cho URL: " + request.getRequestURI());
-       // Client thường gửi token trong header
+
+        // Client thường gửi token trong header
         final String authHeader = request.getHeader("Authorization");
 
         //xly khi token ko hợp lệ
@@ -57,14 +54,6 @@ public class JwtAuthFilter extends OncePerRequestFilter {
 
             // kiểm tra token có hợp lệ ko
             if (jwtUtil.validateToken(token)) {
-                // 1. Lấy Claims từ token
-                Claims claims = jwtUtil.extractAllClaims(token); // Bạn cần sửa extractAllClaims thành public trong JwtUtil
-
-                // 2. Lấy role trực tiếp từ token (nơi đã có chữ ROLE_ADMIN)
-                String roleFromToken = claims.get("role", String.class);
-
-                // 3. Tạo danh sách quyền từ role này
-                List<SimpleGrantedAuthority> authorities = List.of(new SimpleGrantedAuthority(roleFromToken));
                 //nếu hợp lệ sẽ tạo thông tin xác thực trong SecurityContext
                 // Spring Security biết request này thuộc về user nào và có quyền gì.
                 UsernamePasswordAuthenticationToken authToken =

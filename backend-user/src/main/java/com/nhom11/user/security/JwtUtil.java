@@ -1,4 +1,4 @@
-package com.nhom11.admin.security;
+package com.nhom11.user.security;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
@@ -22,7 +22,7 @@ public class JwtUtil {
     public String generateToken(String email, String role) {
         return Jwts.builder()
                 .setSubject(email)
-                .claim("role", "ROLE_" + role)
+                .claim("role", role)
                 .setIssuedAt(new Date())
                 .setExpiration(new Date(System.currentTimeMillis() + EXPIRATION))
                 .signWith(getSignKey(), SignatureAlgorithm.HS256)
@@ -44,7 +44,7 @@ public class JwtUtil {
         }
     }
     //Parser là thành phần dùng để giải mã và kiểm tra token.
-    public Claims extractAllClaims(String token) {
+    private Claims extractAllClaims(String token) {
         return Jwts.parserBuilder()
                 .setSigningKey(getSignKey()) //KIEM TRA CHU KI
                 .build()
