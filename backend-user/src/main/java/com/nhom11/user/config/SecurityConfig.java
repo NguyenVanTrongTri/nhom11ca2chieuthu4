@@ -20,17 +20,16 @@ public class SecurityConfig {
     private final CustomUserDetailsService customUserDetailsService;
     @Autowired
     private JwtAuthFilter jwtAuthFilter;
+
     public SecurityConfig(CustomUserDetailsService customUserDetailsService) {
         this.customUserDetailsService = customUserDetailsService;
     }
 
-    // Mã hóa password
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
 
-    // Authentication Provider
     @Bean
     public DaoAuthenticationProvider authenticationProvider() {
         DaoAuthenticationProvider provider = new DaoAuthenticationProvider();
@@ -39,42 +38,35 @@ public class SecurityConfig {
         return provider;
     }
 
-    //  AuthenticationManager - Cần thiết cho API login
     @Bean
     public AuthenticationManager authenticationManager(HttpSecurity http) throws Exception {
         AuthenticationManagerBuilder authenticationManagerBuilder =
                 http.getSharedObject(AuthenticationManagerBuilder.class);
-
         authenticationManagerBuilder.authenticationProvider(authenticationProvider());
-
         return authenticationManagerBuilder.build();
     }
 
-    // Config JWT
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-
         http
-                .csrf(csrf -> csrf.disable())   // Tắt CSRF cho REST API
-
-                // kHÔNG DÙNG SESSION
+                .csrf(csrf -> csrf.disable())
                 .sessionManagement(session ->
                         session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 )
-
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/auth/**").permitAll()
-                        .requestMatchers("/admin/**").hasRole("ADMIN")
-                        .requestMatchers("/api/user/**").hasAnyRole("USER","ADMIN")
+                        .requestMatchers("/api/user/words/**").permitAll()
+
+                        // BẮT BUỘC PHẢI CÓ DÒNG NÀY ĐỂ MỞ CỬA CHO PROGRESS
+                        .requestMatchers("/api/user/progress/**").hasAnyAuthority("user", "admin", "ROLE_USER", "ROLE_ADMIN")
+
+                        .requestMatchers("/api/user/**").hasAnyAuthority("user", "admin", "ROLE_USER", "ROLE_ADMIN")
+                        .requestMatchers("/admin/**").hasAnyAuthority("admin", "ROLE_ADMIN")
                         .anyRequest().authenticated()
                 )
-
-                // THÊM JWT FILTER
-                //ỗi request đến sẽ đi qua JwtAuthFilter trước tiên để kiểm tra token JWT.
                 .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class)
-
-                // dùng provider
                 .authenticationProvider(authenticationProvider());
+
         return http.build();
     }
 }
