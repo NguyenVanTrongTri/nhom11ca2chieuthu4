@@ -97,52 +97,73 @@ async function handleRegister(e) {
 
 // Simulate Login API - Replace with real API
 async function loginUser(email, password) {
-    return new Promise((resolve) => {
-        setTimeout(() => {
-            // Mock data - Replace with real API call
-            if (email && password.length >= 6) {
-                resolve({
-                    success: true,
-                    user: {
-                        id: 1,
-                        name: 'John Doe',
-                        email: email,
-                        role: email.includes('admin') ? 'admin' : 'user'
-                    },
-                    token: 'mock_token_' + Date.now()
-                });
-            } else {
-                resolve({
-                    success: false,
-                    message: 'Email hoặc mật khẩu không chính xác'
-                });
-            }
-        }, 1000);
-    });
+    try {
+        const response = await fetch(`${CONFIG.API_BASE_URL}/auth/login`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                email: email, // Kiểm tra xem BE dùng 'email' hay 'username' nhé
+                password: password
+            })
+        });
+
+        const data = await response.json();
+
+        if (response.ok) {
+            return {
+                success: true,
+                user: data.user, // BE cần trả về object user có trường 'role'
+                token: data.token
+            };
+        } else {
+            return {
+                success: false,
+                message: data.message || 'Email hoặc mật khẩu không chính xác'
+            };
+        }
+    } catch (error) {
+        console.error('Fetch error:', error);
+        return {
+            success: false,
+            message: 'Không thể kết nối đến server Backend Admin'
+        };
+    }
 }
 
 // Simulate Register API - Replace with real API
 async function registerUser(fullname, email, password) {
-    return new Promise((resolve) => {
-        setTimeout(() => {
-            if (fullname && email && password) {
-                resolve({
-                    success: true,
-                    user: {
-                        id: Math.floor(Math.random() * 10000),
-                        name: fullname,
-                        email: email,
-                        role: 'user'
-                    }
-                });
-            } else {
-                resolve({
-                    success: false,
-                    message: 'Vui lòng điền đầy đủ thông tin'
-                });
-            }
-        }, 1000);
-    });
+    try {
+        const response = await fetch(`${CONFIG.API_BASE_URL}/auth/register`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                username: email,        // Tạm thời lấy email làm username để không bị lỗi null
+                fullName: fullname,     // Sửa từ 'name' thành 'fullName' cho khớp Model
+                email: email,
+                password: password,
+                role: "USER"            // Thêm role mặc định là USER
+            })
+        });
+
+        if (response.ok) {
+            return { success: true };
+        } else {
+            const data = await response.json();
+            return {
+                success: false,
+                message: data.message || 'Đăng ký thất bại'
+            };
+        }
+    } catch (error) {
+        return {
+            success: false,
+            message: 'Lỗi kết nối khi đăng ký'
+        };
+    }
 }
 
 // Show notification
