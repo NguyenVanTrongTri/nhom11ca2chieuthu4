@@ -141,11 +141,12 @@ async function registerUser(fullname, email, password) {
                 'Content-Type': 'application/json'
             },
             body: JSON.stringify({
-                username: email,        // Tạm thời lấy email làm username để không bị lỗi null
-                fullName: fullname,     // Sửa từ 'name' thành 'fullName' cho khớp Model
-                email: email,
+                // Lấy fullName gán cho username để thỏa mãn điều kiện bắt buộc của Java
+                username: fullname,     
+                fullName: fullname,     // Khớp với @Column(name = "full_name") trong Java
+                email: email,           // Khớp với @Column(unique = true)
                 password: password,
-                role: "USER"            // Thêm role mặc định là USER
+                role: "USER"            // Gán cứng role USER để tránh lỗi 400
             })
         });
 
