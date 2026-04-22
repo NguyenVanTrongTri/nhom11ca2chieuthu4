@@ -11,7 +11,7 @@ function initializeAdmin() {
     const user = localStorage.getItem('currentUser');
     if (user) {
         const userData = JSON.parse(user);
-        if (userData.role !== 'admin') {
+        if (userData.role !== 'ADMIN') {
             alert('Bạn không có quyền truy cập trang này');
             window.location.href = '../login.html';
         }
