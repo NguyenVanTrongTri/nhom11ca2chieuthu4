@@ -19,8 +19,8 @@ public class CorsConfig {
         configuration.setAllowedOrigins(Arrays.asList(
             "https://frontend-admin-jctj.onrender.com", 
             "https://frontend-user-getq.onrender.com",
-            "http://localhost:3000",   // Giữ lại để debug local
-            "http://127.0.0.1:5500"
+            "http://localhost:[*]",
+            "http://127.0.0.1:[*]"
         ));
         
         // Cho phép đầy đủ các phương thức để Admin thao tác CRUD
