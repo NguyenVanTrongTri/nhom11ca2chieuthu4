@@ -43,7 +43,7 @@ public class AuthController {
             return ResponseEntity.ok(savedUser);
 
         } catch (RuntimeException e) {
-            return ResponseEntity.badRequest().body(Map.of("message", e.getMessage()));
+            return ResponseEntity.badRequest().body(null);
         }
     }
     // API Đăng nhập
