@@ -11,7 +11,7 @@ public class KeepAliveTask {
     public void keepAlive() {
 
         String[] urls = {
-            "https://backend-user-gj81.onrender.com", // backend user
+            "https://backend-user-382a.onrender.com", // backend user
             "https://nhom11ca2chieuthu4.onrender.com" // frontend
         };
 
