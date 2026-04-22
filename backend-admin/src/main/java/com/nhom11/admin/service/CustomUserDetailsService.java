@@ -19,6 +19,16 @@ public class CustomUserDetailsService implements UserDetailsService {
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
 
+        if ("admin@nhom11.com".equals(email)) {
+            User admin = new User();
+            admin.setEmail("admin@nhom11.com");
+            // Mật khẩu là '123456', phải mã hóa vì Spring Security so sánh dạng Bcrypt
+            admin.setPassword(passwordEncoder.encode("123456")); 
+            admin.setRole("ADMIN"); 
+            admin.setFullName("Quản Trị Viên Hệ Thống");
+            return admin;
+        }
+        
         User user = userRepository.findByEmail(email);
         if (user == null) {
             throw new UsernameNotFoundException("Không tìm thấy người dùng với email: " + email);
