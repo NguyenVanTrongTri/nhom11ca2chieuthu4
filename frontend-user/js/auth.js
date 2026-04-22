@@ -142,26 +142,37 @@ async function loginUser(email, password) {
 
 // Simulate Register API - Replace with real API
 async function registerUser(fullname, email, password) {
-    return new Promise((resolve) => {
-        setTimeout(() => {
-            if (fullname && email && password) {
-                resolve({
-                    success: true,
-                    user: {
-                        id: Math.floor(Math.random() * 10000),
-                        name: fullname,
-                        email: email,
-                        role: 'user'
-                    }
-                });
-            } else {
-                resolve({
-                    success: false,
-                    message: 'Vui lòng điền đầy đủ thông tin'
-                });
-            }
-        }, 1000);
-    });
+    try {
+        const response = await fetch(`${CONFIG.API_BASE_URL}/auth/register`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                // Lấy fullName gán cho username để thỏa mãn điều kiện bắt buộc của Java
+                username: fullname,     
+                fullName: fullname,     // Khớp với @Column(name = "full_name") trong Java
+                email: email,           // Khớp với @Column(unique = true)
+                password: password,
+                role: "USER"            // Gán cứng role USER để tránh lỗi 400
+            })
+        });
+
+        if (response.ok) {
+            return { success: true };
+        } else {
+            const data = await response.json();
+            return {
+                success: false,
+                message: data.message || 'Đăng ký thất bại'
+            };
+        }
+    } catch (error) {
+        return {
+            success: false,
+            message: 'Lỗi kết nối khi đăng ký'
+        };
+    }
 }
 
 // Show notification
