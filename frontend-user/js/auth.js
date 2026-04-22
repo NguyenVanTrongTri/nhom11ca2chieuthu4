@@ -41,7 +41,7 @@ async function handleLogin(e) {
             
             // Redirect based on user role
             setTimeout(() => {
-                if (response.user.role === 'ADMIN') {
+                if (response.user.role === 'admin') {
                     window.location.href = 'admin/admin-dashboard.html';
                 } else {
                     window.location.href = 'user/dashboard.html';
@@ -98,76 +98,70 @@ async function handleRegister(e) {
 // Simulate Login API - Replace with real API
 async function loginUser(email, password) {
     try {
+        // Gọi API thật từ Server Render
         const response = await fetch(`${CONFIG.API_BASE_URL}/auth/login`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
             },
             body: JSON.stringify({
-                email: email, // Kiểm tra xem BE dùng 'email' hay 'username' nhé
+                email: email, 
                 password: password
             })
         });
 
+        // Chờ phản hồi từ Server
         const data = await response.json();
 
         if (response.ok) {
+            // Đăng nhập thành công, trả về dữ liệu thật từ DB
             return {
-            success: true,
-            user: {
-                email: data.email,
-                role: data.role
-            },
-            token: data.token
-    };
+                success: true,
+                user: {
+                    email: data.email,
+                    role: data.role
+                },
+                token: data.token
+            };
         } else {
+            // Sai email/mật khẩu hoặc lỗi từ Backend
             return {
                 success: false,
                 message: data.message || 'Email hoặc mật khẩu không chính xác'
             };
         }
     } catch (error) {
+        // Lỗi này xảy ra khi không thể kết nối tới Server (CORS, mạng, hoặc Server sập)
         console.error('Fetch error:', error);
         return {
             success: false,
-            message: 'Không thể kết nối đến server Backend Admin'
+            message: 'Không thể kết nối đến server. Vui lòng kiểm tra lại kết nối mạng hoặc chờ server khởi động.'
         };
     }
 }
 
 // Simulate Register API - Replace with real API
 async function registerUser(fullname, email, password) {
-    try {
-        const response = await fetch(`${CONFIG.API_BASE_URL}/auth/register`, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({
-                // Lấy fullName gán cho username để thỏa mãn điều kiện bắt buộc của Java
-                username: fullname,     
-                fullName: fullname,     // Khớp với @Column(name = "full_name") trong Java
-                email: email,           // Khớp với @Column(unique = true)
-                password: password,
-                role: "USER"            // Gán cứng role USER để tránh lỗi 400
-            })
-        });
-
-        if (response.ok) {
-            return { success: true };
-        } else {
-            const data = await response.json();
-            return {
-                success: false,
-                message: data.message || 'Đăng ký thất bại'
-            };
-        }
-    } catch (error) {
-        return {
-            success: false,
-            message: 'Lỗi kết nối khi đăng ký'
-        };
-    }
+    return new Promise((resolve) => {
+        setTimeout(() => {
+            if (fullname && email && password) {
+                resolve({
+                    success: true,
+                    user: {
+                        id: Math.floor(Math.random() * 10000),
+                        name: fullname,
+                        email: email,
+                        role: 'user'
+                    }
+                });
+            } else {
+                resolve({
+                    success: false,
+                    message: 'Vui lòng điền đầy đủ thông tin'
+                });
+            }
+        }, 1000);
+    });
 }
 
 // Show notification
