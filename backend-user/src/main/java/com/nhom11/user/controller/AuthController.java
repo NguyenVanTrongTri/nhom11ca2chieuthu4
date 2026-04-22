@@ -43,7 +43,7 @@ public class AuthController {
             return ResponseEntity.ok(savedUser);
 
         } catch (RuntimeException e) {
-            return ResponseEntity.badRequest().body(null);
+            return ResponseEntity.badRequest().body(Map.of("message", e.getMessage()));
         }
     }
     // API Đăng nhập
@@ -70,7 +70,6 @@ public class AuthController {
                     "email", user.getEmail(),
                     "role", user.getRole()
             ));
-
         } catch (Exception e) {
             return ResponseEntity.badRequest().body(Map.of(
                     "message", "Email hoặc mật khẩu không đúng!"
