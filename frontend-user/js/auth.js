@@ -97,28 +97,47 @@ async function handleRegister(e) {
 
 // Simulate Login API - Replace with real API
 async function loginUser(email, password) {
-    return new Promise((resolve) => {
-        setTimeout(() => {
-            // Mock data - Replace with real API call
-            if (email && password.length >= 6) {
-                resolve({
-                    success: true,
-                    user: {
-                        id: 1,
-                        name: 'John Doe',
-                        email: email,
-                        role: email.includes('admin') ? 'admin' : 'user'
-                    },
-                    token: 'mock_token_' + Date.now()
-                });
-            } else {
-                resolve({
-                    success: false,
-                    message: 'Email hoặc mật khẩu không chính xác'
-                });
-            }
-        }, 1000);
-    });
+    try {
+        // Gọi API thật từ Server Render
+        const response = await fetch(`${CONFIG.API_BASE_URL}/auth/login`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                email: email, 
+                password: password
+            })
+        });
+
+        // Chờ phản hồi từ Server
+        const data = await response.json();
+
+        if (response.ok) {
+            // Đăng nhập thành công, trả về dữ liệu thật từ DB
+            return {
+                success: true,
+                user: {
+                    email: data.email,
+                    role: data.role
+                },
+                token: data.token
+            };
+        } else {
+            // Sai email/mật khẩu hoặc lỗi từ Backend
+            return {
+                success: false,
+                message: data.message || 'Email hoặc mật khẩu không chính xác'
+            };
+        }
+    } catch (error) {
+        // Lỗi này xảy ra khi không thể kết nối tới Server (CORS, mạng, hoặc Server sập)
+        console.error('Fetch error:', error);
+        return {
+            success: false,
+            message: 'Không thể kết nối đến server. Vui lòng kiểm tra lại kết nối mạng hoặc chờ server khởi động.'
+        };
+    }
 }
 
 // Simulate Register API - Replace with real API
