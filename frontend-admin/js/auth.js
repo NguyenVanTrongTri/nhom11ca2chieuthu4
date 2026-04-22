@@ -113,10 +113,13 @@ async function loginUser(email, password) {
 
         if (response.ok) {
             return {
-                success: true,
-                user: data.user, // BE cần trả về object user có trường 'role'
-                token: data.token
-            };
+            success: true,
+            user: {
+                email: data.email,
+                role: data.role
+            },
+            token: data.token
+    };
         } else {
             return {
                 success: false,
