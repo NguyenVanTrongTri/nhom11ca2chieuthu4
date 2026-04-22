@@ -23,7 +23,7 @@ public class CustomUserDetailsService implements UserDetailsService {
         
         if ("admin@nhom11.com".equals(email)) {
             User admin = new User();
-            admin.setEmail("admin@nhom11.com");
+            admin.setEmail("adminnhom11@gmail.com");
             // Mật khẩu là '123456', phải mã hóa vì Spring Security so sánh dạng Bcrypt
             admin.setPassword(passwordEncoder.encode("123456")); 
             admin.setRole("ADMIN"); 
