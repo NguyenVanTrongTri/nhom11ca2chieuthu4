@@ -2,7 +2,7 @@
 // Admin JavaScript - Nhóm 11
 // ============================================
 
-const API_BASE_URL = "https://backend-admin-0e0j.onrender.com";
+const API_BASE_URL = "https://backend-admin-vekl.onrender.com";
 
 document.addEventListener('DOMContentLoaded', function() {
     initializeAdmin();
@@ -33,39 +33,38 @@ async function loadRecentUsers() {
     const tableBody = document.getElementById('user-table-body');
     if (!tableBody) return;
 
-    // Lấy token từ localStorage (đã được lưu khi gọi API /auth/login)
+    // Lấy token từ localStorage (đã lưu khi đăng nhập thành công)
     const token = localStorage.getItem('token');
 
     try {
-        // Sửa URL: Nếu UserController nhận thì là /users/all, 
-        // nhưng phải gửi kèm Header Authorization
-        const response = await fetch(`${API_BASE_URL}/users/all`, {
+        // SỬA TẠI ĐÂY: 
+        // 1. Bỏ "/all" vì trong Java chỉ để @GetMapping (trống)
+        // 2. Thêm headers để gửi Token (giải quyết lỗi 403)
+        const response = await fetch(`${API_BASE_URL}/users`, {
             method: 'GET',
             headers: {
-                'Authorization': `Bearer ${token}`, // Gửi "chìa khóa" JWT lên Server
+                'Authorization': `Bearer ${token}`, // Gửi kèm token JWT
                 'Content-Type': 'application/json'
             }
         });
 
-        // Kiểm tra nếu lỗi quyền truy cập (403 Forbidden)
+        // Nếu vẫn bị 403, có thể do Token hết hạn hoặc sai Role
         if (response.status === 403) {
-            console.error('Lỗi 403: Token không hợp lệ hoặc không có quyền Admin');
-            showNotification('Bạn không có quyền thực hiện hành động này!', 'danger');
+            console.error("Lỗi 403: Không có quyền truy cập.");
+            showNotification('Bạn không có quyền Admin hoặc phiên đăng nhập hết hạn', 'danger');
             return;
         }
 
         const users = await response.json();
-
         tableBody.innerHTML = '';
 
-        // Đảo ngược danh sách để hiện user mới nhất lên đầu
+        // Lấy 5 user mới nhất
         const latestUsers = users.slice(-5).reverse();
 
         latestUsers.forEach(user => {
-            // Hiển thị ngày tháng theo định dạng VN
             const date = user.createdAt ? new Date(user.createdAt).toLocaleDateString('vi-VN') : '---';
             
-            // Dựa vào trường 'enabled' từ database để hiện trạng thái
+            // Khớp với trường 'enabled' trong model User.java của bạn
             const isEnabled = user.enabled !== false;
             const statusClass = isEnabled ? 'badge-success' : 'badge-danger';
             const statusText = isEnabled ? 'Hoạt Động' : 'Khóa';
@@ -90,6 +89,7 @@ async function loadRecentUsers() {
             tableBody.insertAdjacentHTML('beforeend', row);
         });
 
+        // Cập nhật tổng số user lên Dashboard
         updateStatValues(users.length);
 
     } catch (error) {
