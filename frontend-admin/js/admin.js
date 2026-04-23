@@ -33,68 +33,93 @@ async function loadRecentUsers() {
     const tableBody = document.getElementById('user-table-body');
     if (!tableBody) return;
 
-    // Lấy token từ localStorage (đã lưu khi đăng nhập thành công)
+    // 1. Lấy token và kiểm tra ngay lập tức
     const token = localStorage.getItem('token');
 
+    // KIỂM TRA TOKEN TRƯỚC KHI FETCH
+    if (!token || token.split('.').length !== 3) {
+        console.error("Token không hợp lệ hoặc bị thiếu:", token);
+        showNotification('Phiên đăng nhập lỗi. Vui lòng đăng nhập lại!', 'warning');
+        // Tùy chọn: window.location.href = 'login.html'; 
+        return;
+    }
+
     try {
-        // SỬA TẠI ĐÂY: 
-        // 1. Bỏ "/all" vì trong Java chỉ để @GetMapping (trống)
-        // 2. Thêm headers để gửi Token (giải quyết lỗi 403)
         const response = await fetch(`${API_BASE_URL}/users`, {
             method: 'GET',
             headers: {
-                'Authorization': `Bearer ${token}`, // Gửi kèm token JWT
+                'Authorization': `Bearer ${token.trim()}`, // .trim() để tránh dư khoảng trắng
                 'Content-Type': 'application/json'
             }
         });
 
-        // Nếu vẫn bị 403, có thể do Token hết hạn hoặc sai Role
-        if (response.status === 403) {
-            console.error("Lỗi 403: Không có quyền truy cập.");
-            showNotification('Bạn không có quyền Admin hoặc phiên đăng nhập hết hạn', 'danger');
+        // 2. Xử lý các mã lỗi HTTP phổ biến
+        if (response.status === 401) {
+            showNotification('Hết hạn đăng nhập. Hãy đăng nhập lại!', 'danger');
             return;
         }
 
+        if (response.status === 403) {
+            console.error("Lỗi 403: Token hợp lệ nhưng Role không có quyền ADMIN.");
+            showNotification('Bạn không có quyền xem danh sách này!', 'danger');
+            return;
+        }
+
+        if (!response.ok) {
+            throw new Error(`Server trả về lỗi: ${response.status}`);
+        }
+
         const users = await response.json();
+        
+        // 3. Xóa dữ liệu cũ và Render
         tableBody.innerHTML = '';
+        if (users.length === 0) {
+            tableBody.innerHTML = '<tr><td colspan="6" class="text-center">Chưa có người dùng nào.</td></tr>';
+            return;
+        }
 
         // Lấy 5 user mới nhất
         const latestUsers = users.slice(-5).reverse();
 
         latestUsers.forEach(user => {
             const date = user.createdAt ? new Date(user.createdAt).toLocaleDateString('vi-VN') : '---';
-            
-            // Khớp với trường 'enabled' trong model User.java của bạn
             const isEnabled = user.enabled !== false;
-            const statusClass = isEnabled ? 'badge-success' : 'badge-danger';
-            const statusText = isEnabled ? 'Hoạt Động' : 'Khóa';
-
+            
             const row = `
                 <tr>
-                    <td>${user.userId}</td>
+                    <td><strong>#${user.userId}</strong></td>
                     <td>${user.fullName || 'N/A'}</td>
                     <td>${user.email}</td>
-                    <td>${date}</td>
-                    <td><span class="badge ${statusClass}">${statusText}</span></td>
+                    <td><small>${date}</small></td>
                     <td>
-                        <a href="user-management.html?id=${user.userId}" class="btn btn-sm btn-outline-primary" title="Xem chi tiết">
-                            <i class="fas fa-eye"></i>
-                        </a>
-                        <button onclick="deleteUser(${user.userId})" class="btn btn-sm btn-outline-danger" title="Xóa">
-                            <i class="fas fa-trash"></i>
-                        </button>
+                        <span class="badge ${isEnabled ? 'badge-success' : 'badge-danger'}">
+                            ${isEnabled ? 'Hoạt Động' : 'Khóa'}
+                        </span>
+                    </td>
+                    <td>
+                        <div class="btn-group">
+                            <a href="user-management.html?id=${user.userId}" class="btn btn-sm btn-outline-info">
+                                <i class="fas fa-eye"></i>
+                            </a>
+                            <button onclick="deleteUser(${user.userId})" class="btn btn-sm btn-outline-danger">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                        </div>
                     </td>
                 </tr>
             `;
             tableBody.insertAdjacentHTML('beforeend', row);
         });
 
-        // Cập nhật tổng số user lên Dashboard
-        updateStatValues(users.length);
+        // Cập nhật con số tổng trên Dashboard
+        if (typeof updateStatValues === "function") {
+            updateStatValues(users.length);
+        }
 
     } catch (error) {
         console.error('Lỗi khi tải user:', error);
-        showNotification('Không thể kết nối với Server Render', 'danger');
+        // Kiểm tra nếu là lỗi kết nối mạng (Server Render ngủ đông hoặc sai URL)
+        showNotification('Lỗi kết nối Server! (Có thể Server đang khởi động)', 'danger');
     }
 }
 
