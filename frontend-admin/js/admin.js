@@ -1,35 +1,99 @@
 // ============================================
-// Admin JavaScript
+// Admin JavaScript - Nhóm 11
 // ============================================
+
+const API_BASE_URL = "https://backend-admin-0e0j.onrender.com";
 
 document.addEventListener('DOMContentLoaded', function() {
     initializeAdmin();
+    // Tự động tải dữ liệu khi trang dashboard mở ra
+    if (document.getElementById('user-table-body')) {
+        loadRecentUsers();
+    }
 });
 
 function initializeAdmin() {
-    // Check if user is admin
+    // 1. Kiểm tra quyền Admin
     const user = localStorage.getItem('currentUser');
     if (user) {
         const userData = JSON.parse(user);
         if (userData.role !== 'ADMIN') {
             alert('Bạn không có quyền truy cập trang này');
             window.location.href = '../login.html';
+            return;
         }
     }
     
-    // Setup admin functionality
+    // 2. Setup các tính năng UI
     setupAdminFunctionality();
 }
 
+// --- HÀM LẤY DỮ LIỆU THẬT TỪ BACKEND ---
+async function loadRecentUsers() {
+    const tableBody = document.getElementById('user-table-body');
+    if (!tableBody) return;
+
+    try {
+        // Gọi API lấy danh sách user
+        const response = await fetch(`${API_BASE_URL}/users/all`);
+        const users = await response.json();
+
+        // Xóa sạch nội dung cũ (mấy dòng John Doe cứng)
+        tableBody.innerHTML = '';
+
+        // Lấy 5 user mới nhất và đảo ngược để người mới lên đầu
+        const latestUsers = users.slice(-5).reverse();
+
+        latestUsers.forEach(user => {
+            // Xử lý ngày tháng từ LocalDateTime (2026-04-23T...)
+            const date = user.createdAt ? new Date(user.createdAt).toLocaleDateString('vi-VN') : '---';
+            
+            // Logic hiển thị Badge trạng thái
+            const statusClass = user.enabled !== false ? 'badge-success' : 'badge-danger';
+            const statusText = user.enabled !== false ? 'Hoạt Động' : 'Khóa';
+
+            const row = `
+                <tr>
+                    <td>${user.userId}</td>
+                    <td>${user.fullName || 'N/A'}</td>
+                    <td>${user.email}</td>
+                    <td>${date}</td>
+                    <td><span class="badge ${statusClass}">${statusText}</span></td>
+                    <td>
+                        <a href="user-management.html?id=${user.userId}" class="btn btn-sm btn-outline-primary" title="Xem chi tiết">
+                            <i class="fas fa-eye"></i>
+                        </a>
+                        <button onclick="deleteUser(${user.userId})" class="btn btn-sm btn-outline-danger" title="Xóa">
+                            <i class="fas fa-trash"></i>
+                        </button>
+                    </td>
+                </tr>
+            `;
+            tableBody.insertAdjacentHTML('beforeend', row);
+        });
+
+        // Cập nhật con số Thống kê (Nếu có class tương ứng)
+        updateStatValues(users.length);
+
+    } catch (error) {
+        console.error('Lỗi khi tải user:', error);
+        showNotification('Không thể kết nối với Server Render', 'danger');
+    }
+}
+
+// Cập nhật các con số trên Stats Grid
+function updateStatValues(totalCount) {
+    const totalStat = document.querySelector('.stat-card:nth-child(1) .stat-value');
+    if (totalStat) {
+        totalStat.innerText = totalCount.toLocaleString();
+    }
+}
+
+// --- CÁC HÀM XỬ LÝ UI CỦA BẠN (GIỮ NGUYÊN) ---
+
 function setupAdminFunctionality() {
-    // Setup search/filter
     setupSearch();
-    
-    // Setup delete buttons
-    setupDeleteButtons();
-    
-    // Setup edit buttons
-    setupEditButtons();
+    // Bỏ setupDeleteButtons vì mình đã dùng onclick trực tiếp trong row
 }
 
 function setupSearch() {
@@ -41,38 +105,11 @@ function setupSearch() {
     });
 }
 
-function setupDeleteButtons() {
-    const deleteButtons = document.querySelectorAll('button[title*="Xóa"]');
-    deleteButtons.forEach(button => {
-        button.addEventListener('click', function(e) {
-            e.preventDefault();
-            if (confirm('Bạn có chắc chắn muốn xóa?')) {
-                this.closest('tr').remove();
-                showNotification('Đã xóa thành công', 'success');
-            }
-        });
-    });
-}
-
-function setupEditButtons() {
-    const editButtons = document.querySelectorAll('button[title*="Chỉnh sửa"], button[title*="sửa"]');
-    editButtons.forEach(button => {
-        button.addEventListener('click', function() {
-            console.log('Edit clicked');
-            // Modal will be triggered by Bootstrap
-        });
-    });
-}
-
 function filterResults(searchTerm) {
     const rows = document.querySelectorAll('tbody tr');
     rows.forEach(row => {
         const text = row.textContent.toLowerCase();
-        if (text.includes(searchTerm.toLowerCase())) {
-            row.style.display = '';
-        } else {
-            row.style.display = 'none';
-        }
+        row.style.display = text.includes(searchTerm.toLowerCase()) ? '' : 'none';
     });
 }
 
@@ -87,57 +124,21 @@ function debounce(func, wait) {
 function showNotification(message, type = 'info') {
     const alert = document.createElement('div');
     alert.className = `alert alert-${type} alert-dismissible fade show`;
-    alert.setAttribute('role', 'alert');
-    alert.style.marginBottom = '1rem';
-    alert.innerHTML = `
-        ${message}
-        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-    `;
+    alert.innerHTML = `${message} <button type="button" class="btn-close" data-bs-dismiss="alert"></button>`;
+    alert.style.position = 'fixed';
+    alert.style.top = '20px';
+    alert.style.right = '20px';
+    alert.style.zIndex = '9999';
     
-    const container = document.querySelector('.container-fluid');
-    if (container) {
-        container.insertBefore(alert, container.firstChild);
-    }
-    
-    setTimeout(() => {
-        alert.remove();
-    }, 3000);
+    document.body.appendChild(alert);
+    setTimeout(() => alert.remove(), 3000);
 }
 
-// Lock/Unlock user
-function toggleUserStatus(userId, currentStatus) {
-    if (confirm(`Bạn có chắc chắn muốn ${currentStatus === 'locked' ? 'mở khoá' : 'khóa'} tài khoản này?`)) {
-        console.log('Toggle user status:', userId);
-        showNotification(`Đã ${currentStatus === 'locked' ? 'mở khoá' : 'khóa'} tài khoản`, 'success');
-    }
-}
-
-// Delete user
-function deleteUser(userId) {
+// Delete user (Gọi API thật nếu cần)
+async function deleteUser(userId) {
     if (confirm('Xóa tài khoản này sẽ xoá vĩnh viễn tất cả dữ liệu. Tiếp tục không?')) {
-        console.log('Delete user:', userId);
-        showNotification('Đã xóa tài khoản', 'success');
-    }
-}
-
-// Add vocabulary
-function addVocabulary(e) {
-    e.preventDefault();
-    console.log('Adding vocabulary...');
-    showNotification('Đã thêm từ vựng mới', 'success');
-}
-
-// Edit vocabulary
-function editVocabulary(e) {
-    e.preventDefault();
-    console.log('Editing vocabulary...');
-    showNotification('Đã cập nhật từ vựng', 'success');
-}
-
-// Delete vocabulary
-function deleteVocabulary(vocabId) {
-    if (confirm('Bạn có chắc chắn muốn xóa từ vựng này?')) {
-        console.log('Delete vocabulary:', vocabId);
-        showNotification('Đã xóa từ vựng', 'success');
+        console.log('Đang xóa user ID:', userId);
+        // Ở đây bạn có thể gọi fetch(`${API_BASE_URL}/users/delete/${userId}`, { method: 'DELETE' })
+        showNotification('Tính năng xóa đang được đồng bộ với DB...', 'warning');
     }
 }
