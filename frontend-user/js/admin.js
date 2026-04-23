@@ -1,35 +1,177 @@
 // ============================================
-// Admin JavaScript
+// Admin JavaScript - Nhóm 11
 // ============================================
+
+const API_BASE_URL = "https://backend-admin-vekl.onrender.com";
 
 document.addEventListener('DOMContentLoaded', function() {
     initializeAdmin();
+
+    // Kiểm tra và tải User nếu có bảng User trên trang
+    if (document.getElementById('user-table-body')) {
+        loadRecentUsers();
+    }
+
+    // Kiểm tra và tải Vocabulary nếu có bảng Vocab trên trang
+    // Tách riêng ra như thế này thì trang Vocabulary Management mới chạy được!
+    if (document.getElementById('vocab-table-body')) {
+        loadRecentVocabs();
+    }
 });
 
 function initializeAdmin() {
-    // Check if user is admin
+    // 1. Kiểm tra quyền Admin
     const user = localStorage.getItem('currentUser');
     if (user) {
         const userData = JSON.parse(user);
-        if (userData.role !== 'admin') {
+        if (userData.role !== 'ADMIN') {
             alert('Bạn không có quyền truy cập trang này');
             window.location.href = '../login.html';
+            return;
         }
     }
     
-    // Setup admin functionality
+    // 2. Setup các tính năng UI
     setupAdminFunctionality();
 }
 
+// --- HÀM LẤY DỮ LIỆU THẬT TỪ BACKEND ---
+async function loadRecentUsers() {
+    const tableBody = document.getElementById('user-table-body');
+    const badge = document.getElementById('total-users-badge');
+    const totalStat = document.getElementById('total-users-count'); // Thêm dòng này
+    const token = localStorage.getItem('token');
+
+    if (!tableBody) return;
+
+    try {
+        const response = await fetch(`${API_BASE_URL}/users`, {
+            method: 'GET',
+            headers: {
+                'Authorization': `Bearer ${token}`,
+                'Content-Type': 'application/json'
+            }
+        });
+
+        if (!response.ok) throw new Error('Không thể tải danh sách');
+
+        const users = await response.json();
+        
+        // --- PHẦN CẬP NHẬT SỐ LIỆU ĐỘNG ---
+        if(badge) badge.innerText = `${users.length} người dùng`;
+        if(totalStat) totalStat.innerText = users.length.toLocaleString(); // Tự động cập nhật con số 1,245
+        // ----------------------------------
+        
+        tableBody.innerHTML = ''; 
+
+        if (users.length === 0) {
+            tableBody.innerHTML = '<tr><td colspan="6" class="text-center">Danh sách trống.</td></tr>';
+            return;
+        }
+
+        users.reverse().forEach(user => {
+            const date = user.createdAt ? new Date(user.createdAt).toLocaleDateString('vi-VN') : '---';
+            const isEnabled = user.enabled !== false;
+
+            const row = `
+                <tr>
+                    <td><strong>#${user.userId}</strong></td>
+                    <td>${user.fullName || 'N/A'}</td>
+                    <td>${user.email}</td>
+                    <td><small>${date}</small></td>
+                    <td>
+                        <span class="badge ${isEnabled ? 'badge-success' : 'badge-danger'}">
+                            ${isEnabled ? 'Hoạt Động' : 'Bị Khóa'}
+                        </span>
+                    </td>
+                    <td style="text-align: center;">
+                        <div class="btn-group">
+                            <button onclick="viewDetail(${user.userId})" class="btn btn-sm btn-outline-primary" title="Xem">
+                                <i class="fas fa-eye"></i>
+                            </button>
+                            <button onclick="deleteUser(${user.userId})" class="btn btn-sm btn-outline-danger" title="Xóa">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                        </div>
+                    </td>
+                </tr>
+            `;
+            tableBody.insertAdjacentHTML('beforeend', row);
+        });
+
+    } catch (error) {
+        console.error(error);
+        tableBody.innerHTML = '<tr><td colspan="6" class="text-center text-danger">Lỗi kết nối Server!</td></tr>';
+    }
+}
+async function loadRecentVocabs() {
+    const vocabBody = document.getElementById('vocab-table-body');
+    const token = localStorage.getItem('token');
+    const totalVocabStat = document.getElementById('total-vocab-count'); 
+
+    if (!vocabBody) return;
+
+    try {
+        // Đảm bảo URL chính xác theo Postman
+        const response = await fetch(`https://backend-admin-vekl.onrender.com/api/admin/vocabulary`, {
+            method: 'GET',
+            headers: {
+                'Authorization': `Bearer ${token}`,
+                'Content-Type': 'application/json'
+            }
+        });
+
+        if (!response.ok) throw new Error('Không thể tải danh sách từ vựng');
+
+        const vocabs = await response.json();
+        
+        if (totalVocabStat) totalVocabStat.innerText = vocabs.length.toLocaleString();
+
+        vocabBody.innerHTML = ''; 
+
+        if (vocabs.length === 0) {
+            vocabBody.innerHTML = '<tr><td colspan="5" class="text-center">Chưa có từ vựng nào.</td></tr>';
+            return;
+        }
+
+        // Đảo ngược để từ mới nhất lên đầu
+        vocabs.reverse().forEach(item => {
+            const categoryName = item.category ? item.category.categoryName : 'N/A';
+            
+            const row = `
+                <tr>
+                    <td><strong>${item.word}</strong></td>
+                    <td><code style="color: #e83e8c;">${item.phonetic || ''}</code></td>
+                    <td><span class="badge badge-info">${categoryName}</span></td>
+                    <td><small class="text-muted">${item.wordType || 'noun'}</small></td>
+                    <td style="text-align: center;">
+                        <a href="vocabulary-management.html?edit=${item.vocabularyId}" class="btn btn-sm btn-outline-primary">
+                            <i class="fas fa-edit"></i>
+                        </a>
+                    </td>
+                </tr>
+            `;
+            vocabBody.insertAdjacentHTML('beforeend', row);
+        });
+
+    } catch (error) {
+        console.error("Lỗi Vocab:", error);
+        vocabBody.innerHTML = '<tr><td colspan="5" class="text-center text-danger">Lỗi kết nối Server!</td></tr>';
+    }
+}
+// Cập nhật các con số trên Stats Grid
+function updateStatValues(totalCount) {
+    const totalStat = document.querySelector('.stat-card:nth-child(1) .stat-value');
+    if (totalStat) {
+        totalStat.innerText = totalCount.toLocaleString();
+    }
+}
+
+// --- CÁC HÀM XỬ LÝ UI CỦA BẠN (GIỮ NGUYÊN) ---
+
 function setupAdminFunctionality() {
-    // Setup search/filter
     setupSearch();
-    
-    // Setup delete buttons
-    setupDeleteButtons();
-    
-    // Setup edit buttons
-    setupEditButtons();
+    // Bỏ setupDeleteButtons vì mình đã dùng onclick trực tiếp trong row
 }
 
 function setupSearch() {
@@ -41,38 +183,11 @@ function setupSearch() {
     });
 }
 
-function setupDeleteButtons() {
-    const deleteButtons = document.querySelectorAll('button[title*="Xóa"]');
-    deleteButtons.forEach(button => {
-        button.addEventListener('click', function(e) {
-            e.preventDefault();
-            if (confirm('Bạn có chắc chắn muốn xóa?')) {
-                this.closest('tr').remove();
-                showNotification('Đã xóa thành công', 'success');
-            }
-        });
-    });
-}
-
-function setupEditButtons() {
-    const editButtons = document.querySelectorAll('button[title*="Chỉnh sửa"], button[title*="sửa"]');
-    editButtons.forEach(button => {
-        button.addEventListener('click', function() {
-            console.log('Edit clicked');
-            // Modal will be triggered by Bootstrap
-        });
-    });
-}
-
 function filterResults(searchTerm) {
     const rows = document.querySelectorAll('tbody tr');
     rows.forEach(row => {
         const text = row.textContent.toLowerCase();
-        if (text.includes(searchTerm.toLowerCase())) {
-            row.style.display = '';
-        } else {
-            row.style.display = 'none';
-        }
+        row.style.display = text.includes(searchTerm.toLowerCase()) ? '' : 'none';
     });
 }
 
@@ -87,57 +202,21 @@ function debounce(func, wait) {
 function showNotification(message, type = 'info') {
     const alert = document.createElement('div');
     alert.className = `alert alert-${type} alert-dismissible fade show`;
-    alert.setAttribute('role', 'alert');
-    alert.style.marginBottom = '1rem';
-    alert.innerHTML = `
-        ${message}
-        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-    `;
+    alert.innerHTML = `${message} <button type="button" class="btn-close" data-bs-dismiss="alert"></button>`;
+    alert.style.position = 'fixed';
+    alert.style.top = '20px';
+    alert.style.right = '20px';
+    alert.style.zIndex = '9999';
     
-    const container = document.querySelector('.container-fluid');
-    if (container) {
-        container.insertBefore(alert, container.firstChild);
-    }
-    
-    setTimeout(() => {
-        alert.remove();
-    }, 3000);
+    document.body.appendChild(alert);
+    setTimeout(() => alert.remove(), 3000);
 }
 
-// Lock/Unlock user
-function toggleUserStatus(userId, currentStatus) {
-    if (confirm(`Bạn có chắc chắn muốn ${currentStatus === 'locked' ? 'mở khoá' : 'khóa'} tài khoản này?`)) {
-        console.log('Toggle user status:', userId);
-        showNotification(`Đã ${currentStatus === 'locked' ? 'mở khoá' : 'khóa'} tài khoản`, 'success');
-    }
-}
-
-// Delete user
-function deleteUser(userId) {
+// Delete user (Gọi API thật nếu cần)
+async function deleteUser(userId) {
     if (confirm('Xóa tài khoản này sẽ xoá vĩnh viễn tất cả dữ liệu. Tiếp tục không?')) {
-        console.log('Delete user:', userId);
-        showNotification('Đã xóa tài khoản', 'success');
-    }
-}
-
-// Add vocabulary
-function addVocabulary(e) {
-    e.preventDefault();
-    console.log('Adding vocabulary...');
-    showNotification('Đã thêm từ vựng mới', 'success');
-}
-
-// Edit vocabulary
-function editVocabulary(e) {
-    e.preventDefault();
-    console.log('Editing vocabulary...');
-    showNotification('Đã cập nhật từ vựng', 'success');
-}
-
-// Delete vocabulary
-function deleteVocabulary(vocabId) {
-    if (confirm('Bạn có chắc chắn muốn xóa từ vựng này?')) {
-        console.log('Delete vocabulary:', vocabId);
-        showNotification('Đã xóa từ vựng', 'success');
+        console.log('Đang xóa user ID:', userId);
+        // Ở đây bạn có thể gọi fetch(`${API_BASE_URL}/users/delete/${userId}`, { method: 'DELETE' })
+        showNotification('Tính năng xóa đang được đồng bộ với DB...', 'warning');
     }
 }
