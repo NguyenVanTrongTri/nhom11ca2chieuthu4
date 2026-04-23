@@ -12,7 +12,7 @@ public class KeepAliveTask {
 
         String[] urls = {
 
-            "https://backend-admin-0e0j.onrender.com",
+            "https://backend-admin-vekl.onrender.com",
             "https://nhom11ca2chieuthu4.onrender.com"
         };
 
