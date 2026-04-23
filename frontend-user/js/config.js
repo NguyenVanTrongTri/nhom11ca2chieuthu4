@@ -1,3 +1,3 @@
 const CONFIG = {
-    API_BASE_URL: "https://backend-user-382a.onrender.com"
+    API_BASE_URL: "https://backend-user-oclw.onrender.com"
 };
