@@ -100,26 +100,23 @@ async function loginUser(email, password) {
     try {
         const response = await fetch(`${CONFIG.API_BASE_URL}/auth/login`, {
             method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({
-                email: email, // Kiểm tra xem BE dùng 'email' hay 'username' nhé
-                password: password
-            })
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ email: email, password: password })
         });
 
         const data = await response.json();
 
         if (response.ok) {
+            // QUAN TRỌNG: Phải lưu vào localStorage ở đây!
+            localStorage.setItem('token', data.token); 
+            localStorage.setItem('userRole', data.role); // Lưu luôn role để kiểm tra bên Frontend
+            localStorage.setItem('userEmail', data.email);
+
             return {
-            success: true,
-            user: {
-                email: data.email,
-                role: data.role
-            },
-            token: data.token
-    };
+                success: true,
+                user: { email: data.email, role: data.role },
+                token: data.token
+            };
         } else {
             return {
                 success: false,
@@ -128,10 +125,7 @@ async function loginUser(email, password) {
         }
     } catch (error) {
         console.error('Fetch error:', error);
-        return {
-            success: false,
-            message: 'Không thể kết nối đến server Backend Admin'
-        };
+        return { success: false, message: 'Không thể kết nối đến server' };
     }
 }
 
