@@ -67,15 +67,10 @@ public class SecurityConfig {
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/auth/**").permitAll()
                         .requestMatchers("/admin/**").hasRole("ADMIN")
-                        .requestMatchers("/users/**").hasAnyRole("USER")
+                        .requestMatchers("/users/**").hasAnyRole("USER","ADMIN")
                         .anyRequest().authenticated()
                 )
-
-                // THÊM JWT FILTER
-                //ỗi request đến sẽ đi qua JwtAuthFilter trước tiên để kiểm tra token JWT.
                 .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class)
-
-                // dùng provider
                 .authenticationProvider(authenticationProvider());
                 return http.build();
     }
