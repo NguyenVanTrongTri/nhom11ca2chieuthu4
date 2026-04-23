@@ -22,7 +22,7 @@ public class User implements UserDetails {
     @Column(name = "username", nullable = false)
     private String username;
 
-    @JsonIgnore
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     @Column(nullable = false)
     private String password;
 
