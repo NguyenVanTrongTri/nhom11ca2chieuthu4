@@ -9,6 +9,7 @@ document.addEventListener('DOMContentLoaded', function() {
     // Tự động tải dữ liệu khi trang dashboard mở ra
     if (document.getElementById('user-table-body')) {
         loadRecentUsers();
+        loadRecentVocabs();
     }
 });
 
