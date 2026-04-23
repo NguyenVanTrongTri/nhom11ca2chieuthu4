@@ -95,7 +95,8 @@
                 </div>
 
                 <!-- Users Table -->
-                <div style="background-color: white; padding: 2rem; border-radius: 8px; box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);">
+                 <div style="background-color: white; padding: 2rem; border-radius: 8px; box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1); margin-bottom: 2rem;">
+                    <h3 style="font-weight: 600; margin-bottom: 1.5rem; color: #111827;">User Mới Nhất</h3>
                     <div class="table-responsive">
                         <table class="table table-hover">
                             <thead>
@@ -104,131 +105,23 @@
                                     <th style="font-weight: 600; color: #2563eb;">Tên</th>
                                     <th style="font-weight: 600; color: #2563eb;">Email</th>
                                     <th style="font-weight: 600; color: #2563eb;">Ngày Tham Gia</th>
-                                    <th style="font-weight: 600; color: #2563eb;">Từ Đã Học</th>
                                     <th style="font-weight: 600; color: #2563eb;">Trạng Thái</th>
                                     <th style="font-weight: 600; color: #2563eb;">Hành Động</th>
                                 </tr>
                             </thead>
-                            <tbody>
+                            <tbody id="user-table-body">
                                 <tr>
-                                    <td>1001</td>
-                                    <td>John Doe</td>
-                                    <td>john@example.com</td>
-                                    <td>2024-01-15</td>
-                                    <td>245</td>
-                                    <td><span class="badge badge-success">Hoạt Động</span></td>
-                                    <td>
-                                        <button class="btn btn-sm btn-outline-primary" title="Xem chi tiết">
-                                            <i class="fas fa-eye"></i>
-                                        </button>
-                                        <button class="btn btn-sm btn-outline-warning" title="Khóa tài khoản">
-                                            <i class="fas fa-lock"></i>
-                                        </button>
-                                        <button class="btn btn-sm btn-outline-danger" title="Xóa tài khoản">
-                                            <i class="fas fa-trash"></i>
-                                        </button>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>1002</td>
-                                    <td>Jane Smith</td>
-                                    <td>jane@example.com</td>
-                                    <td>2024-01-16</td>
-                                    <td>189</td>
-                                    <td><span class="badge badge-success">Hoạt Động</span></td>
-                                    <td>
-                                        <button class="btn btn-sm btn-outline-primary" title="Xem chi tiết">
-                                            <i class="fas fa-eye"></i>
-                                        </button>
-                                        <button class="btn btn-sm btn-outline-warning" title="Khóa tài khoản">
-                                            <i class="fas fa-lock"></i>
-                                        </button>
-                                        <button class="btn btn-sm btn-outline-danger" title="Xóa tài khoản">
-                                            <i class="fas fa-trash"></i>
-                                        </button>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>1003</td>
-                                    <td>Robert Wilson</td>
-                                    <td>robert@example.com</td>
-                                    <td>2024-01-17</td>
-                                    <td>156</td>
-                                    <td><span class="badge badge-warning">Không Hoạt Động</span></td>
-                                    <td>
-                                        <button class="btn btn-sm btn-outline-primary" title="Xem chi tiết">
-                                            <i class="fas fa-eye"></i>
-                                        </button>
-                                        <button class="btn btn-sm btn-outline-warning" title="Khóa tài khoản">
-                                            <i class="fas fa-lock"></i>
-                                        </button>
-                                        <button class="btn btn-sm btn-outline-danger" title="Xóa tài khoản">
-                                            <i class="fas fa-trash"></i>
-                                        </button>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>1004</td>
-                                    <td>Maria Garcia</td>
-                                    <td>maria@example.com</td>
-                                    <td>2024-01-18</td>
-                                    <td>0</td>
-                                    <td><span class="badge badge-danger">Bị Khóa</span></td>
-                                    <td>
-                                        <button class="btn btn-sm btn-outline-primary" title="Xem chi tiết">
-                                            <i class="fas fa-eye"></i>
-                                        </button>
-                                        <button class="btn btn-sm btn-outline-success" title="Mở khoá tài khoản">
-                                            <i class="fas fa-unlock"></i>
-                                        </button>
-                                        <button class="btn btn-sm btn-outline-danger" title="Xóa tài khoản">
-                                            <i class="fas fa-trash"></i>
-                                        </button>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>1005</td>
-                                    <td>David Brown</td>
-                                    <td>david@example.com</td>
-                                    <td>2024-01-19</td>
-                                    <td>312</td>
-                                    <td><span class="badge badge-success">Hoạt Động</span></td>
-                                    <td>
-                                        <button class="btn btn-sm btn-outline-primary" title="Xem chi tiết">
-                                            <i class="fas fa-eye"></i>
-                                        </button>
-                                        <button class="btn btn-sm btn-outline-warning" title="Khóa tài khoản">
-                                            <i class="fas fa-lock"></i>
-                                        </button>
-                                        <button class="btn btn-sm btn-outline-danger" title="Xóa tài khoản">
-                                            <i class="fas fa-trash"></i>
-                                        </button>
+                                    <td colspan="6" class="text-center">
+                                        <div class="spinner-border text-primary" role="status">
+                                            <span class="visually-hidden">Đang tải dữ liệu...</span>
+                                        </div>
+                                        <p>Đang tải danh sách người dùng...</p>
                                     </td>
                                 </tr>
                             </tbody>
                         </table>
                     </div>
-
-                    <!-- Pagination -->
-                    <nav style="margin-top: 2rem;">
-                        <ul class="pagination" style="justify-content: center;">
-                            <li class="page-item disabled">
-                                <a class="page-link" href="#">Trước</a>
-                            </li>
-                            <li class="page-item active">
-                                <a class="page-link" href="#">1</a>
-                            </li>
-                            <li class="page-item">
-                                <a class="page-link" href="#">2</a>
-                            </li>
-                            <li class="page-item">
-                                <a class="page-link" href="#">3</a>
-                            </li>
-                            <li class="page-item">
-                                <a class="page-link" href="#">Tiếp</a>
-                            </li>
-                        </ul>
-                    </nav>
+                    <a href="user-management.html" class="btn btn-primary" style="margin-top: 1rem;">Xem Tất Cả User</a>
                 </div>
             </div>
         </div>
