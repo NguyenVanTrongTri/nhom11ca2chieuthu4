@@ -31,60 +31,39 @@ function initializeAdmin() {
 // --- HÀM LẤY DỮ LIỆU THẬT TỪ BACKEND ---
 async function loadRecentUsers() {
     const tableBody = document.getElementById('user-table-body');
-    if (!tableBody) return;
-
-    // 1. Lấy token và kiểm tra ngay lập tức
+    const badge = document.getElementById('total-users-badge');
     const token = localStorage.getItem('token');
 
-    // KIỂM TRA TOKEN TRƯỚC KHI FETCH
-    if (!token || token.split('.').length !== 3) {
-        console.error("Token không hợp lệ hoặc bị thiếu:", token);
-        showNotification('Phiên đăng nhập lỗi. Vui lòng đăng nhập lại!', 'warning');
-        // Tùy chọn: window.location.href = 'login.html'; 
-        return;
-    }
+    if (!tableBody) return;
 
     try {
         const response = await fetch(`${API_BASE_URL}/users`, {
             method: 'GET',
             headers: {
-                'Authorization': `Bearer ${token.trim()}`, // .trim() để tránh dư khoảng trắng
+                'Authorization': `Bearer ${token}`,
                 'Content-Type': 'application/json'
             }
         });
 
-        // 2. Xử lý các mã lỗi HTTP phổ biến
-        if (response.status === 401) {
-            showNotification('Hết hạn đăng nhập. Hãy đăng nhập lại!', 'danger');
-            return;
-        }
-
-        if (response.status === 403) {
-            console.error("Lỗi 403: Token hợp lệ nhưng Role không có quyền ADMIN.");
-            showNotification('Bạn không có quyền xem danh sách này!', 'danger');
-            return;
-        }
-
-        if (!response.ok) {
-            throw new Error(`Server trả về lỗi: ${response.status}`);
-        }
+        if (!response.ok) throw new Error('Không thể tải danh sách');
 
         const users = await response.json();
         
-        // 3. Xóa dữ liệu cũ và Render
-        tableBody.innerHTML = '';
+        // Cập nhật số lượng tổng
+        if(badge) badge.innerText = `${users.length} người dùng`;
+        
+        tableBody.innerHTML = ''; // Xóa thông báo đang tải
+
         if (users.length === 0) {
-            tableBody.innerHTML = '<tr><td colspan="6" class="text-center">Chưa có người dùng nào.</td></tr>';
+            tableBody.innerHTML = '<tr><td colspan="6" class="text-center">Danh sách trống.</td></tr>';
             return;
         }
 
-        // Lấy 5 user mới nhất
-        const latestUsers = users.slice(-5).reverse();
-
-        latestUsers.forEach(user => {
+        // Đổ TOÀN BỘ dữ liệu (dùng reverse để người mới nhất hiện lên đầu)
+        users.reverse().forEach(user => {
             const date = user.createdAt ? new Date(user.createdAt).toLocaleDateString('vi-VN') : '---';
             const isEnabled = user.enabled !== false;
-            
+
             const row = `
                 <tr>
                     <td><strong>#${user.userId}</strong></td>
@@ -93,15 +72,15 @@ async function loadRecentUsers() {
                     <td><small>${date}</small></td>
                     <td>
                         <span class="badge ${isEnabled ? 'badge-success' : 'badge-danger'}">
-                            ${isEnabled ? 'Hoạt Động' : 'Khóa'}
+                            ${isEnabled ? 'Hoạt Động' : 'Bị Khóa'}
                         </span>
                     </td>
-                    <td>
+                    <td style="text-align: center;">
                         <div class="btn-group">
-                            <a href="user-management.html?id=${user.userId}" class="btn btn-sm btn-outline-info">
+                            <button onclick="viewDetail(${user.userId})" class="btn btn-sm btn-outline-primary" title="Xem">
                                 <i class="fas fa-eye"></i>
-                            </a>
-                            <button onclick="deleteUser(${user.userId})" class="btn btn-sm btn-outline-danger">
+                            </button>
+                            <button onclick="deleteUser(${user.userId})" class="btn btn-sm btn-outline-danger" title="Xóa">
                                 <i class="fas fa-trash"></i>
                             </button>
                         </div>
@@ -111,15 +90,9 @@ async function loadRecentUsers() {
             tableBody.insertAdjacentHTML('beforeend', row);
         });
 
-        // Cập nhật con số tổng trên Dashboard
-        if (typeof updateStatValues === "function") {
-            updateStatValues(users.length);
-        }
-
     } catch (error) {
-        console.error('Lỗi khi tải user:', error);
-        // Kiểm tra nếu là lỗi kết nối mạng (Server Render ngủ đông hoặc sai URL)
-        showNotification('Lỗi kết nối Server! (Có thể Server đang khởi động)', 'danger');
+        console.error(error);
+        tableBody.innerHTML = '<tr><td colspan="6" class="text-center text-danger">Lỗi kết nối Server!</td></tr>';
     }
 }
 
