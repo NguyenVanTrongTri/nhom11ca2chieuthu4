@@ -97,7 +97,65 @@ async function loadRecentUsers() {
         tableBody.innerHTML = '<tr><td colspan="6" class="text-center text-danger">Lỗi kết nối Server!</td></tr>';
     }
 }
+async function loadRecentVocabs() {
+    const vocabBody = document.getElementById('vocab-table-body');
+    const token = localStorage.getItem('token');
+    
+    // Nếu bạn có một thẻ thống kê Tổng Từ Vựng, hãy đặt ID là total-vocab-count
+    const totalVocabStat = document.getElementById('total-vocab-count'); 
 
+    if (!vocabBody) return;
+
+    try {
+        // API URL khớp với @RequestMapping("/api/admin/vocabulary") của Backend
+        const response = await fetch(`${API_BASE_URL}/api/admin/vocabulary`, {
+            method: 'GET',
+            headers: {
+                'Authorization': `Bearer ${token}`,
+                'Content-Type': 'application/json'
+            }
+        });
+
+        if (!response.ok) throw new Error('Không thể tải danh sách từ vựng');
+
+        const vocabs = await response.json();
+        
+        // Cập nhật con số thống kê tổng (nếu có)
+        if (totalVocabStat) totalVocabStat.innerText = vocabs.length.toLocaleString();
+
+        vocabBody.innerHTML = ''; 
+
+        if (vocabs.length === 0) {
+            vocabBody.innerHTML = '<tr><td colspan="5" class="text-center">Chưa có từ vựng nào.</td></tr>';
+            return;
+        }
+
+        // Đảo ngược mảng để những từ mới add gần đây hiện lên đầu
+        vocabs.reverse().forEach(item => {
+            // Lấy tên category từ object Category bên trong Vocabulary
+            const categoryName = item.category ? item.category.categoryName : 'Chưa phân loại';
+            
+            const row = `
+                <tr>
+                    <td><strong>${item.word}</strong></td>
+                    <td><code style="color: #e83e8c;">${item.phonetic || ''}</code></td>
+                    <td><span class="badge badge-info">${categoryName}</span></td>
+                    <td><i class="text-muted">${item.wordType || 'N/A'}</i></td>
+                    <td style="text-align: center;">
+                        <a href="vocabulary-management.html?edit=${item.id}" class="btn btn-sm btn-outline-primary">
+                            <i class="fas fa-edit"></i>
+                        </a>
+                    </td>
+                </tr>
+            `;
+            vocabBody.insertAdjacentHTML('beforeend', row);
+        });
+
+    } catch (error) {
+        console.error("Lỗi Vocab:", error);
+        vocabBody.innerHTML = '<tr><td colspan="5" class="text-center text-danger">Lỗi kết nối Server!</td></tr>';
+    }
+}
 // Cập nhật các con số trên Stats Grid
 function updateStatValues(totalCount) {
     const totalStat = document.querySelector('.stat-card:nth-child(1) .stat-value');
