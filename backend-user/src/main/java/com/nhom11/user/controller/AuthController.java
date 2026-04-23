@@ -35,14 +35,16 @@ public class AuthController {
 
 
     @PostMapping("/register")
-    public ResponseEntity<User> register(@RequestBody User user) {
+    // Sửa thành <?> để chấp nhận cả đối tượng User lẫn String thông báo lỗi
+    public ResponseEntity<?> register(@RequestBody User user) { 
         try {
             User savedUser = userService.register(user);
             // Không trả password về cho client
             savedUser.setPassword(null);
-            return ResponseEntity.ok(savedUser);
+            return ResponseEntity.ok(savedUser); // Trả về User -> Hợp lệ
 
         } catch (RuntimeException e) {
+            // Trả về String (e.getMessage()) -> Bây giờ đã hợp lệ nhờ dấu <?>
             return ResponseEntity.badRequest().body(e.getMessage());
         }
     }
