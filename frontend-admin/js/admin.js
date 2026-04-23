@@ -32,6 +32,7 @@ function initializeAdmin() {
 async function loadRecentUsers() {
     const tableBody = document.getElementById('user-table-body');
     const badge = document.getElementById('total-users-badge');
+    const totalStat = document.getElementById('total-users-count'); // Thêm dòng này
     const token = localStorage.getItem('token');
 
     if (!tableBody) return;
@@ -49,17 +50,18 @@ async function loadRecentUsers() {
 
         const users = await response.json();
         
-        // Cập nhật số lượng tổng
+        // --- PHẦN CẬP NHẬT SỐ LIỆU ĐỘNG ---
         if(badge) badge.innerText = `${users.length} người dùng`;
+        if(totalStat) totalStat.innerText = users.length.toLocaleString(); // Tự động cập nhật con số 1,245
+        // ----------------------------------
         
-        tableBody.innerHTML = ''; // Xóa thông báo đang tải
+        tableBody.innerHTML = ''; 
 
         if (users.length === 0) {
             tableBody.innerHTML = '<tr><td colspan="6" class="text-center">Danh sách trống.</td></tr>';
             return;
         }
 
-        // Đổ TOÀN BỘ dữ liệu (dùng reverse để người mới nhất hiện lên đầu)
         users.reverse().forEach(user => {
             const date = user.createdAt ? new Date(user.createdAt).toLocaleDateString('vi-VN') : '---';
             const isEnabled = user.enabled !== false;
