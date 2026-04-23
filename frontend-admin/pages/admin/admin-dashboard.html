@@ -111,33 +111,45 @@
 
                 <!-- Recent Users -->
                 <div style="background-color: white; padding: 2rem; border-radius: 8px; box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1); margin-bottom: 2rem;">
-                    <h3 style="font-weight: 600; margin-bottom: 1.5rem; color: #111827;">User Mới Nhất</h3>
-                    <div class="table-responsive">
-                        <table class="table table-hover">
-                            <thead>
-                                <tr style="background-color: #f3f4f6;">
-                                    <th style="font-weight: 600; color: #2563eb;">ID</th>
-                                    <th style="font-weight: 600; color: #2563eb;">Tên</th>
-                                    <th style="font-weight: 600; color: #2563eb;">Email</th>
-                                    <th style="font-weight: 600; color: #2563eb;">Ngày Tham Gia</th>
-                                    <th style="font-weight: 600; color: #2563eb;">Trạng Thái</th>
-                                    <th style="font-weight: 600; color: #2563eb;">Hành Động</th>
-                                </tr>
-                            </thead>
-                            <tbody id="user-table-body">
-                                <tr>
-                                    <td colspan="6" class="text-center">
-                                        <div class="spinner-border text-primary" role="status">
-                                            <span class="visually-hidden">Đang tải dữ liệu...</span>
-                                        </div>
-                                        <p>Đang tải danh sách người dùng...</p>
-                                    </td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                    <a href="user-management.html" class="btn btn-primary" style="margin-top: 1rem;">Xem Tất Cả User</a>
+                <h3 style="font-weight: 600; margin-bottom: 1.5rem; color: #111827;">User Mới Nhất</h3>
+                
+                <div class="table-responsive">
+                    <style>
+                        #user-table-body tr:nth-child(n+7) {
+                            display: none !important;
+                        }
+                    </style>
+
+                    <table class="table table-hover">
+                        <thead>
+                            <tr style="background-color: #f3f4f6;">
+                                <th style="font-weight: 600; color: #2563eb;">ID</th>
+                                <th style="font-weight: 600; color: #2563eb;">Tên</th>
+                                <th style="font-weight: 600; color: #2563eb;">Email</th>
+                                <th style="font-weight: 600; color: #2563eb;">Ngày Tham Gia</th>
+                                <th style="font-weight: 600; color: #2563eb;">Trạng Thái</th>
+                                <th style="font-weight: 600; color: #2563eb; text-align: center;">Hành Động</th>
+                            </tr>
+                        </thead>
+                        <tbody id="user-table-body">
+                            <tr>
+                                <td colspan="6" class="text-center">
+                                    <div class="spinner-border text-primary" role="status">
+                                        <span class="visually-hidden">Đang tải dữ liệu...</span>
+                                    </div>
+                                    <p>Đang tải danh sách người dùng...</p>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
                 </div>
+
+                <div class="d-flex justify-content-start">
+                    <a href="user-management.html" class="btn btn-primary" style="margin-top: 1rem;">
+                        <i class="fas fa-users me-2"></i>Xem Tất Cả User
+                    </a>
+                </div>
+            </div>
 
                 <!-- Recent Vocabulary -->
                 <div style="background-color: white; padding: 2rem; border-radius: 8px; box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);">
