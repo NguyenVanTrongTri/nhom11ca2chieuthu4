@@ -9,6 +9,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // Kiểm tra và tải User nếu có bảng User trên trang
     if (document.getElementById('user-table-body')) {
+        loadRecentVocabs();
         loadRecentUsers();
     }
 
