@@ -152,59 +152,35 @@
             </div>
 
                 <!-- Recent Vocabulary -->
-                <div style="background-color: white; padding: 2rem; border-radius: 8px; box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);">
-                    <h3 style="font-weight: 600; margin-bottom: 1.5rem; color: #111827;">Từ Vựng Mới Nhất</h3>
-                    <div class="table-responsive">
-                        <table class="table table-hover">
-                            <thead>
-                                <tr style="background-color: #f3f4f6;">
-                                    <th style="font-weight: 600; color: #2563eb;">Từ Vựng</th>
-                                    <th style="font-weight: 600; color: #2563eb;">Phiên Âm</th>
-                                    <th style="font-weight: 600; color: #2563eb;">Chủ Đề</th>
-                                    <th style="font-weight: 600; color: #2563eb;">Ngày Thêm</th>
-                                    <th style="font-weight: 600; color: #2563eb;">Hành Động</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td><strong>Delicious</strong></td>
-                                    <td>/dɪˈlɪʃəs/</td>
-                                    <td><span class="badge badge-primary">Food</span></td>
-                                    <td>2024-01-15</td>
-                                    <td>
-                                        <a href="vocabulary-management.html" class="btn btn-sm btn-outline-primary">
-                                            <i class="fas fa-edit"></i>
-                                        </a>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td><strong>Journey</strong></td>
-                                    <td>/ˈdʒɜːrni/</td>
-                                    <td><span class="badge badge-primary">Travel</span></td>
-                                    <td>2024-01-14</td>
-                                    <td>
-                                        <a href="vocabulary-management.html" class="btn btn-sm btn-outline-primary">
-                                            <i class="fas fa-edit"></i>
-                                        </a>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td><strong>Profit</strong></td>
-                                    <td>/ˈprɒfɪt/</td>
-                                    <td><span class="badge badge-primary">Business</span></td>
-                                    <td>2024-01-13</td>
-                                    <td>
-                                        <a href="vocabulary-management.html" class="btn btn-sm btn-outline-primary">
-                                            <i class="fas fa-edit"></i>
-                                        </a>
-                                    </td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                    <a href="vocabulary-management.html" class="btn btn-primary" style="margin-top: 1rem;">Xem Tất Cả Từ Vựng</a>
+               <div style="background-color: white; padding: 2rem; border-radius: 8px; box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1); margin-bottom: 2rem;">
+                <h3 style="font-weight: 600; margin-bottom: 1.5rem; color: #111827;">Từ Vựng Mới Nhất</h3>
+                <div class="table-responsive">
+                    <style>
+                        #vocab-table-body tr:nth-child(n+7) {
+                            display: none !important;
+                        }
+                    </style>
+                    
+                    <table class="table table-hover">
+                        <thead>
+                            <tr style="background-color: #f3f4f6;">
+                                <th style="font-weight: 600; color: #2563eb;">Từ Vựng</th>
+                                <th style="font-weight: 600; color: #2563eb;">Phiên Âm</th>
+                                <th style="font-weight: 600; color: #2563eb;">Chủ Đề</th>
+                                <th style="font-weight: 600; color: #2563eb;">Loại Từ</th>
+                                <th style="font-weight: 600; color: #2563eb; text-align: center;">Hành Động</th>
+                            </tr>
+                        </thead>
+                        <tbody id="vocab-table-body">
+                            <tr>
+                                <td colspan="5" class="text-center">Đang tải dữ liệu từ vựng...</td>
+                            </tr>
+                        </tbody>
+                    </table>
                 </div>
+                <a href="vocabulary-management.html" class="btn btn-primary" style="margin-top: 1rem;">Xem Tất Cả Từ Vựng</a>
             </div>
+                        </div>
         </div>
     </div>
 
