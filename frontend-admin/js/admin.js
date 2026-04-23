@@ -100,15 +100,13 @@ async function loadRecentUsers() {
 async function loadRecentVocabs() {
     const vocabBody = document.getElementById('vocab-table-body');
     const token = localStorage.getItem('token');
-    
-    // Nếu bạn có một thẻ thống kê Tổng Từ Vựng, hãy đặt ID là total-vocab-count
     const totalVocabStat = document.getElementById('total-vocab-count'); 
 
     if (!vocabBody) return;
 
     try {
-        // API URL khớp với @RequestMapping("/api/admin/vocabulary") của Backend
-        const response = await fetch(`${API_BASE_URL}/api/admin/vocabulary`, {
+        // Đảm bảo URL chính xác theo Postman
+        const response = await fetch(`https://backend-admin-vekl.onrender.com/api/admin/vocabulary`, {
             method: 'GET',
             headers: {
                 'Authorization': `Bearer ${token}`,
@@ -120,7 +118,6 @@ async function loadRecentVocabs() {
 
         const vocabs = await response.json();
         
-        // Cập nhật con số thống kê tổng (nếu có)
         if (totalVocabStat) totalVocabStat.innerText = vocabs.length.toLocaleString();
 
         vocabBody.innerHTML = ''; 
@@ -130,19 +127,18 @@ async function loadRecentVocabs() {
             return;
         }
 
-        // Đảo ngược mảng để những từ mới add gần đây hiện lên đầu
+        // Đảo ngược để từ mới nhất lên đầu
         vocabs.reverse().forEach(item => {
-            // Lấy tên category từ object Category bên trong Vocabulary
-            const categoryName = item.category ? item.category.categoryName : 'Chưa phân loại';
+            const categoryName = item.category ? item.category.categoryName : 'N/A';
             
             const row = `
                 <tr>
                     <td><strong>${item.word}</strong></td>
                     <td><code style="color: #e83e8c;">${item.phonetic || ''}</code></td>
                     <td><span class="badge badge-info">${categoryName}</span></td>
-                    <td><i class="text-muted">${item.wordType || 'N/A'}</i></td>
+                    <td><small class="text-muted">${item.wordType || 'noun'}</small></td>
                     <td style="text-align: center;">
-                        <a href="vocabulary-management.html?edit=${item.id}" class="btn btn-sm btn-outline-primary">
+                        <a href="vocabulary-management.html?edit=${item.vocabularyId}" class="btn btn-sm btn-outline-primary">
                             <i class="fas fa-edit"></i>
                         </a>
                     </td>
