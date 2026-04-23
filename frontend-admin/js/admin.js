@@ -33,24 +33,42 @@ async function loadRecentUsers() {
     const tableBody = document.getElementById('user-table-body');
     if (!tableBody) return;
 
+    // Lấy token từ localStorage (đã được lưu khi gọi API /auth/login)
+    const token = localStorage.getItem('token');
+
     try {
-        // Gọi API lấy danh sách user
-        const response = await fetch(`${API_BASE_URL}/users/all`);
+        // Sửa URL: Nếu UserController nhận thì là /users/all, 
+        // nhưng phải gửi kèm Header Authorization
+        const response = await fetch(`${API_BASE_URL}/users/all`, {
+            method: 'GET',
+            headers: {
+                'Authorization': `Bearer ${token}`, // Gửi "chìa khóa" JWT lên Server
+                'Content-Type': 'application/json'
+            }
+        });
+
+        // Kiểm tra nếu lỗi quyền truy cập (403 Forbidden)
+        if (response.status === 403) {
+            console.error('Lỗi 403: Token không hợp lệ hoặc không có quyền Admin');
+            showNotification('Bạn không có quyền thực hiện hành động này!', 'danger');
+            return;
+        }
+
         const users = await response.json();
 
-        // Xóa sạch nội dung cũ (mấy dòng John Doe cứng)
         tableBody.innerHTML = '';
 
-        // Lấy 5 user mới nhất và đảo ngược để người mới lên đầu
+        // Đảo ngược danh sách để hiện user mới nhất lên đầu
         const latestUsers = users.slice(-5).reverse();
 
         latestUsers.forEach(user => {
-            // Xử lý ngày tháng từ LocalDateTime (2026-04-23T...)
+            // Hiển thị ngày tháng theo định dạng VN
             const date = user.createdAt ? new Date(user.createdAt).toLocaleDateString('vi-VN') : '---';
             
-            // Logic hiển thị Badge trạng thái
-            const statusClass = user.enabled !== false ? 'badge-success' : 'badge-danger';
-            const statusText = user.enabled !== false ? 'Hoạt Động' : 'Khóa';
+            // Dựa vào trường 'enabled' từ database để hiện trạng thái
+            const isEnabled = user.enabled !== false;
+            const statusClass = isEnabled ? 'badge-success' : 'badge-danger';
+            const statusText = isEnabled ? 'Hoạt Động' : 'Khóa';
 
             const row = `
                 <tr>
@@ -72,7 +90,6 @@ async function loadRecentUsers() {
             tableBody.insertAdjacentHTML('beforeend', row);
         });
 
-        // Cập nhật con số Thống kê (Nếu có class tương ứng)
         updateStatValues(users.length);
 
     } catch (error) {
