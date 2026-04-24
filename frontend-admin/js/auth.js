@@ -125,7 +125,7 @@ async function loginUser(email, password) {
         }
     } catch (error) {
         console.error('Fetch error:', error);
-        return { success: false, message: 'Không thể kết nối đến server' };
+        return { success: false, message: 'Không thể kết nối đến server1' };
     }
 }
 
