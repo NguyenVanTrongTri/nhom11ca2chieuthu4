@@ -19,12 +19,8 @@ public class CorsConfig {
         configuration.setAllowedOrigins(Arrays.asList(
             "https://frontend-admin-jctj.onrender.com", 
             "https://frontend-user-getq.onrender.com",
-            "http://localhost:3000",   // React mặc định
-            "http://127.0.0.1:3000",
-            "http://localhost:5500",   // Live Server (VS Code) mặc định
-            "http://127.0.0.1:5500",
-            "http://localhost:5173",   // Vite mặc định
-            "http://localhost:8080"
+            "http://localhost:3000",   // Giữ lại để debug local
+            "http://127.0.0.1:5500"
         ));
         
         
