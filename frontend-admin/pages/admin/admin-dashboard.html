@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard - English Learning App</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="../../css/style.css">
+    <link rel="stylesheet" href="../../css/dashboard.css">
+</head>
+<body>
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-dark" style="background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="../../index.html">
+                <i class="fas fa-shield-alt"></i> EnglishLearn Admin
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown">
+                            <i class="fas fa-user-shield"></i> Quản Trị
+                        </a>
+                        <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                            <li><a class="dropdown-item" href="admin-dashboard.html">Dashboard</a></li>
+                            <li><a class="dropdown-item" href="user-management.html">Quản Lý User</a></li>
+                            <li><a class="dropdown-item" href="vocabulary-management.html">Quản Lý Từ Vựng</a></li>
+                            <li><hr class="dropdown-divider"></li>
+                            <li><a class="dropdown-item" href="../login.html">Đăng Xuất</a></li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="dashboard-container">
+        <!-- Sidebar -->
+        <div class="dashboard-sidebar">
+            <ul class="sidebar-menu">
+                <li><a href="admin-dashboard.html" class="active">
+                    <i class="fas fa-chart-pie"></i> Dashboard
+                </a></li>
+                <li><a href="user-management.html">
+                    <i class="fas fa-users"></i> Quản Lý User
+                </a></li>
+                <li><a href="vocabulary-management.html">
+                    <i class="fas fa-book"></i> Quản Lý Từ Vựng
+                </a></li>
+                <li><a href="#statistics">
+                    <i class="fas fa-chart-bar"></i> Thống Kê
+                </a></li>
+                <li><a href="#reports">
+                    <i class="fas fa-file-alt"></i> Báo Cáo
+                </a></li>
+            </ul>
+        </div>
+
+        <!-- Content -->
+        <div class="dashboard-content">
+            <div class="container-fluid">
+                <h1 class="section-title"><i class="fas fa-chart-pie"></i> Admin Dashboard</h1>
+
+                <!-- Stats Grid -->
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-icon blue">
+                            <i class="fas fa-users"></i>
+                        </div>
+                        <div class="stat-content">
+                            <h3>Tổng User</h3>
+                            <div class="stat-value" id="total-users-count">0</div>
+                        </div>
+                    </div>
+
+                    <div class="stat-card">
+                        <div class="stat-icon green">
+                            <i class="fas fa-book"></i>
+                        </div>
+                        <div class="stat-content">
+                            <h3>Từ Vựng</h3>
+                            <div class="stat-value">2,350</div>
+                        </div>
+                    </div>
+
+                    <div class="stat-card">
+                        <div class="stat-icon orange">
+                            <i class="fas fa-check-circle"></i>
+                        </div>
+                        <div class="stat-content">
+                            <h3>User Hoạt Động</h3>
+                            <div class="stat-value">456</div>
+                        </div>
+                    </div>
+
+                    <div class="stat-card">
+                        <div class="stat-icon red">
+                            <i class="fas fa-lock"></i>
+                        </div>
+                        <div class="stat-content">
+                            <h3>User Bị Khóa</h3>
+                            <div class="stat-value">12</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Recent Users -->
+                <div style="background-color: white; padding: 2rem; border-radius: 8px; box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1); margin-bottom: 2rem;">
+                <h3 style="font-weight: 600; margin-bottom: 1.5rem; color: #111827;">User Mới Nhất</h3>
+                
+                <div class="table-responsive">
+                    <style>
+                        #user-table-body tr:nth-child(n+7) {
+                            display: none !important;
+                        }
+                    </style>
+
+                    <table class="table table-hover">
+                        <thead>
+                            <tr style="background-color: #f3f4f6;">
+                                <th style="font-weight: 600; color: #2563eb;">ID</th>
+                                <th style="font-weight: 600; color: #2563eb;">Tên</th>
+                                <th style="font-weight: 600; color: #2563eb;">Email</th>
+                                <th style="font-weight: 600; color: #2563eb;">Ngày Tham Gia</th>
+                                <th style="font-weight: 600; color: #2563eb;">Trạng Thái</th>
+                                <th style="font-weight: 600; color: #2563eb; text-align: center;">Hành Động</th>
+                            </tr>
+                        </thead>
+                        <tbody id="user-table-body">
+                            <tr>
+                                <td colspan="6" class="text-center">
+                                    <div class="spinner-border text-primary" role="status">
+                                        <span class="visually-hidden">Đang tải dữ liệu...</span>
+                                    </div>
+                                    <p>Đang tải danh sách người dùng...</p>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="d-flex justify-content-start">
+                    <a href="user-management.html" class="btn btn-primary" style="margin-top: 1rem;">
+                        <i class="fas fa-users me-2"></i>Xem Tất Cả User
+                    </a>
+                </div>
+            </div>
+                <!-- Recent Vocabulary -->
+                <div style="background-color: white; padding: 2rem; border-radius: 8px; box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);">
+                    <h3 style="font-weight: 600; margin-bottom: 1.5rem; color: #111827;">Từ Vựng Mới Nhất</h3>
+                    <div class="table-responsive">
+                        <style>
+                            #vocab-table-body tr:nth-child(n+7) {
+                                display: none !important;
+                            }
+                        </style>
+                        
+                        <table class="table table-hover">
+                            <thead>
+                                <tr style="background-color: #f3f4f6;">
+                                    <th style="font-weight: 600; color: #2563eb;">Từ Vựng</th>
+                                    <th style="font-weight: 600; color: #2563eb;">Phiên Âm</th>
+                                    <th style="font-weight: 600; color: #2563eb;">Chủ Đề</th>
+                                    <th style="font-weight: 600; color: #2563eb;">Ngày Thêm</th>
+                                    <th style="font-weight: 600; color: #2563eb;">Hành Động</th>
+                                </tr>
+                            </thead>
+                            <tbody id="vocab-table-body">
+                                <tr>
+                                    <td colspan="5" class="text-center">Đang tải từ vựng...</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <a href="vocabulary-management.html" class="btn btn-primary" style="margin-top: 1rem;">Xem Tất Cả Từ Vựng</a>
+                </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer style="background-color: #1f2937; color: white; padding: 2rem; text-align: center; margin-top: 3rem;">
+        <p style="margin: 0;">&copy; 2024 English Learning App. All rights reserved.</p>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="../../js/config.js"></script>
+    <script src="../../js/app.js"></script>
+    <script src="../../js/admin.js"></script>
+</body>
+</html>
