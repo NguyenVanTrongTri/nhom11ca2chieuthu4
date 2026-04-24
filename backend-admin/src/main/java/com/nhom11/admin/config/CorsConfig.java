@@ -1,4 +1,4 @@
-package com.nhom11.admin.config;
+package com.nhom11.user.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -19,9 +19,14 @@ public class CorsConfig {
         configuration.setAllowedOrigins(Arrays.asList(
             "https://frontend-admin-jctj.onrender.com", 
             "https://frontend-user-getq.onrender.com",
-            "http://localhost:3000",   // Giữ lại để debug local
-            "http://127.0.0.1:5500"
+            "http://localhost:3000",   // React mặc định
+            "http://127.0.0.1:3000",
+            "http://localhost:5500",   // Live Server (VS Code) mặc định
+            "http://127.0.0.1:5500",
+            "http://localhost:5173",   // Vite mặc định
+            "http://localhost:8080"
         ));
+        
         
         // Cho phép đầy đủ các phương thức để Admin thao tác CRUD
         configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH"));
